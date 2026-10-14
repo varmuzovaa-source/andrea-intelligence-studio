@@ -2,9 +2,10 @@ import { createContext, useContext, useState, type ReactNode } from 'react';
 import { Link, useRouterState } from '@tanstack/react-router';
 import { LayoutGrid, Sprout, Globe2, Megaphone, FileChartColumn, Settings2, PanelLeftClose, PanelLeftOpen, ChevronDown, ArrowUpRight, Bell, Check, X, Menu, Command, CircleHelp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { clients } from '@/lib/analytics-data';
+import { clients, type RecoArea } from '@/lib/analytics-data';
+type RecoState = Record<RecoArea, boolean>;
 
-const WorkspaceContext = createContext<{ client: number; period: string; setClient: (v: number) => void; setPeriod: (v: string) => void }>({ client: 0, period: '30', setClient: () => {}, setPeriod: () => {} });
+const WorkspaceContext = createContext<{ client: number; period: string; setClient: (v: number) => void; setPeriod: (v: string) => void; reco: RecoState; toggleReco: (a: RecoArea) => void }>({ client: 0, period: '30', setClient: () => {}, setPeriod: () => {}, reco: { keywords: true, google: true, meta: true }, toggleReco: () => {} });
 export const useWorkspace = () => useContext(WorkspaceContext);
 const navigation = [
   { to: '/', name: 'Přehled', icon: LayoutGrid },
@@ -16,12 +17,14 @@ const navigation = [
 export function Workspace({ children }: { children: ReactNode }) {
   const [client, setClient] = useState(0);
   const [period, setPeriod] = useState('30');
+  const [reco, setReco] = useState<RecoState>({ keywords: true, google: true, meta: true });
+  const toggleReco = (a: RecoArea) => setReco(r => ({ ...r, [a]: !r[a] }));
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notice, setNotice] = useState(false);
   const path = useRouterState({ select: state => state.location.pathname });
   const current = navigation.find(item => item.to === path)?.name ?? (path === '/profil' ? 'Uživatelský profil' : 'Nastavení');
-  return <WorkspaceContext.Provider value={{ client, period, setClient, setPeriod }}>
+  return <WorkspaceContext.Provider value={{ client, period, setClient, setPeriod, reco, toggleReco }}>
     <div className={`workspace ${collapsed ? 'sidebar-collapsed' : ''} ${mobileOpen ? 'mobile-open' : ''}`}>
       {mobileOpen && <div className="sidebar-scrim" onClick={() => setMobileOpen(false)} />}
       <aside className="workspace-sidebar">
