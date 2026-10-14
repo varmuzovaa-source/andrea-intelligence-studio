@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as KampaneRouteImport } from './routes/kampane'
+import { Route as NastaveniRouteImport } from './routes/nastaveni'
+import { Route as OrganikaRouteImport } from './routes/organika'
+import { Route as ProfilRouteImport } from './routes/profil'
+import { Route as ReportyRouteImport } from './routes/reporty'
+import { Route as WebRouteImport } from './routes/web'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KampaneRoute = KampaneRouteImport.update({
+  id: '/kampane',
+  path: '/kampane',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NastaveniRoute = NastaveniRouteImport.update({
+  id: '/nastaveni',
+  path: '/nastaveni',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrganikaRoute = OrganikaRouteImport.update({
+  id: '/organika',
+  path: '/organika',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfilRoute = ProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportyRoute = ReportyRouteImport.update({
+  id: '/reporty',
+  path: '/reporty',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WebRoute = WebRouteImport.update({
+  id: '/web',
+  path: '/web',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/kampane': typeof KampaneRoute
+  '/nastaveni': typeof NastaveniRoute
+  '/organika': typeof OrganikaRoute
+  '/profil': typeof ProfilRoute
+  '/reporty': typeof ReportyRoute
+  '/web': typeof WebRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/kampane': typeof KampaneRoute
+  '/nastaveni': typeof NastaveniRoute
+  '/organika': typeof OrganikaRoute
+  '/profil': typeof ProfilRoute
+  '/reporty': typeof ReportyRoute
+  '/web': typeof WebRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/kampane': typeof KampaneRoute
+  '/nastaveni': typeof NastaveniRoute
+  '/organika': typeof OrganikaRoute
+  '/profil': typeof ProfilRoute
+  '/reporty': typeof ReportyRoute
+  '/web': typeof WebRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/kampane'
+    | '/nastaveni'
+    | '/organika'
+    | '/profil'
+    | '/reporty'
+    | '/web'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/kampane'
+    | '/nastaveni'
+    | '/organika'
+    | '/profil'
+    | '/reporty'
+    | '/web'
+  id:
+    | '__root__'
+    | '/'
+    | '/kampane'
+    | '/nastaveni'
+    | '/organika'
+    | '/profil'
+    | '/reporty'
+    | '/web'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  KampaneRoute: typeof KampaneRoute
+  NastaveniRoute: typeof NastaveniRoute
+  OrganikaRoute: typeof OrganikaRoute
+  ProfilRoute: typeof ProfilRoute
+  ReportyRoute: typeof ReportyRoute
+  WebRoute: typeof WebRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +130,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/kampane': {
+      id: '/kampane'
+      path: '/kampane'
+      fullPath: '/kampane'
+      preLoaderRoute: typeof KampaneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nastaveni': {
+      id: '/nastaveni'
+      path: '/nastaveni'
+      fullPath: '/nastaveni'
+      preLoaderRoute: typeof NastaveniRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/organika': {
+      id: '/organika'
+      path: '/organika'
+      fullPath: '/organika'
+      preLoaderRoute: typeof OrganikaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profil': {
+      id: '/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof ProfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reporty': {
+      id: '/reporty'
+      path: '/reporty'
+      fullPath: '/reporty'
+      preLoaderRoute: typeof ReportyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/web': {
+      id: '/web'
+      path: '/web'
+      fullPath: '/web'
+      preLoaderRoute: typeof WebRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  KampaneRoute: KampaneRoute,
+  NastaveniRoute: NastaveniRoute,
+  OrganikaRoute: OrganikaRoute,
+  ProfilRoute: ProfilRoute,
+  ReportyRoute: ReportyRoute,
+  WebRoute: WebRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
