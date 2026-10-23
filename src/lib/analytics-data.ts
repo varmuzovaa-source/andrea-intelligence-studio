@@ -9,7 +9,7 @@ export const demoClients = [
   { name: 'Klinika Aurea', model: 'hybrid', monogram: 'a.', isDemo: true },
   { name: 'Fasada Pro', model: 'b2b', monogram: 'f.', isDemo: true },
 ] as const satisfies readonly { name: string; model: BusinessModel; monogram: string; isDemo: true }[];
-export const clients = demoClients.map(c => c.name);
+export const clients = demoClients.map(c => c.name) as unknown as readonly ['Greenly Store', 'Klinika Aurea', 'Fasada Pro'];
 export const creativeImages = [skincare, interior, sneaker];
 export const money = (value: number) => new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 0 }).format(value) + ' Kč';
 export const number = (value: number) => new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 0 }).format(value);
