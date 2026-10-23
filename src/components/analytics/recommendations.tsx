@@ -19,7 +19,7 @@ export function Recommendations({ areas, title = 'Doporučení' }: { areas: Reco
     <SectionHeading title={title} subtitle="Automatická analýza ukázkových dat · komu co předat" action={<RecoToggles />} />
     {items.length === 0 ? <div className="info-banner"><EyeOff size={18} /><span>Doporučení jsou pro tuto sekci skrytá. Zapněte je tlačítky výše.</span></div> :
       <div className="reco-grid">{items.map(r => <article key={r.id} className="reco-card">
-        <div className="reco-top"><span className={`reco-priority p-${r.priority === 'Vysoká' ? 'high' : r.priority === 'Střední' ? 'mid' : 'low'}`}>{r.priority}</span><small>{recoAreas.find(a => a.id === r.area)?.name}</small></div>
+        <div className="reco-top"><span className={`reco-priority p-${r.priority === 'Vysoká' ? 'high' : r.priority === 'Střední' ? 'mid' : 'low'}`}>{r.priority}</span><small>{recoAreas.find(a => a.id === r.area)?.name}{r.confidence ? ` · jistota ${r.confidence.toLowerCase()}` : ''}</small></div>
         <h3><Lightbulb size={15} />{r.title}</h3>
         <p>{r.insight}</p>
         <p className="reco-action"><strong>Co udělat:</strong> {r.action}</p>

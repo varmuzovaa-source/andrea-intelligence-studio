@@ -2,19 +2,22 @@ import skincare from '@/assets/creative-skincare.jpg';
 import interior from '@/assets/creative-interior.jpg';
 import sneaker from '@/assets/creative-sneaker.jpg';
 
-export type BusinessModel = 'ecommerce' | 'hybrid' | 'b2b';
-export const modelLabels: Record<BusinessModel, string> = { ecommerce: 'E-commerce', hybrid: 'Hybrid · služby + e-shop', b2b: 'B2B' };
+import { modelConfigs, type BusinessModel, type KpiCode } from './business-models';
+export { modelConfigs, modelLabels, type BusinessModel, type KpiCode } from './business-models';
 export const demoClients = [
   { name: 'Greenly Store', model: 'ecommerce', monogram: 'g.', isDemo: true },
   { name: 'Klinika Aurea', model: 'hybrid', monogram: 'a.', isDemo: true },
   { name: 'Fasada Pro', model: 'b2b', monogram: 'f.', isDemo: true },
+  { name: 'Studio Lumen', model: 'services', monogram: 'l.', isDemo: true },
 ] as const satisfies readonly { name: string; model: BusinessModel; monogram: string; isDemo: true }[];
-export const clients = demoClients.map(c => c.name) as unknown as readonly ['Greenly Store', 'Klinika Aurea', 'Fasada Pro'];
+export const clients = demoClients.map(c => c.name) as unknown as readonly ['Greenly Store', 'Klinika Aurea', 'Fasada Pro', 'Studio Lumen'];
+export const clientModel = (client: number): BusinessModel => demoClients[client]?.model ?? 'ecommerce';
+export const clientConfig = (client: number) => modelConfigs[clientModel(client)];
 export const creativeImages = [skincare, interior, sneaker];
 export const money = (value: number) => new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 0 }).format(value) + ' Kč';
 export const number = (value: number) => new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 0 }).format(value);
 export function getAnalytics(client: number, period: string) {
-  const factor = [1, 0.72, 1.28][client] ?? 1;
+  const factor = [1, 0.72, 1.28, 0.46][client] ?? 1;
   const days = period === '7' ? 7 : period === '90' ? 90 : 30;
   const multiplier = factor * days / 30;
   const spend = Math.round(124680 * multiplier);
@@ -33,7 +36,7 @@ export function getAnalytics(client: number, period: string) {
     day.spend = Math.round(day.spend / rawSpend * spend);
     day.previous = Math.round(day.previous / rawRevenue * revenue / 1.186);
   });
-  const names = client === 0 ? ['Podzimní kolekce · Sales', 'Bestsellery · Advantage+', 'Remarketing · 30 dní', 'Brand · Vyhledávání', 'Nová kolekce · PMax', 'Newsletter · Září', 'Prospecting · Video', 'Brand · Shopping'] : client === 1 ? ['Konzultace zdarma · Leady', 'Kosmetika · Sales', 'Remarketing · Klinika', 'Brand · Vyhledávání', 'E-shop · PMax', 'Newsletter · Péče', 'Ošetření · Video', 'Kosmetika · Shopping'] : ['Zateplení fasád · Leady', 'Developeři · LinkedIn', 'Remarketing · Reference', 'Brand · Vyhledávání', 'Poptávky · PMax', 'Newsletter · Projekty', 'Realizace · Video', 'Služby · Vyhledávání'];
+  const names = [['Podzimní kolekce · Sales', 'Bestsellery · Advantage+', 'Remarketing · 30 dní', 'Brand · Vyhledávání', 'Nová kolekce · PMax', 'Newsletter · Září', 'Prospecting · Video', 'Brand · Shopping'], ['Konzultace zdarma · Leady', 'Kosmetika · Sales', 'Remarketing · Klinika', 'Brand · Vyhledávání', 'E-shop · PMax', 'Newsletter · Péče', 'Ošetření · Video', 'Kosmetika · Shopping'], ['Zateplení fasád · Leady', 'Developeři · LinkedIn', 'Remarketing · Reference', 'Brand · Vyhledávání', 'Poptávky · PMax', 'Newsletter · Projekty', 'Realizace · Video', 'Služby · Vyhledávání'], ['Ošetření pleti · Leady', 'Rezervace online · Sales', 'Remarketing · Salon', 'Brand · Vyhledávání', 'Ošetření · Vyhledávání', 'Newsletter · Péče', 'Proměny · Video', 'Dárkové poukazy · Leady']][client] ?? ['Podzimní kolekce · Sales', 'Bestsellery · Advantage+', 'Remarketing · 30 dní', 'Brand · Vyhledávání', 'Nová kolekce · PMax', 'Newsletter · Září', 'Prospecting · Video', 'Brand · Shopping'];
   const rows = names.map((name, i) => {
     const rowSpend = Math.round(([32450, 28120, 18760, 12350, 16480, 2800, 8500, 5200][i] ?? 0) * multiplier);
     const roas = ([5.82, 5.24, 6.18, 7.42, 3.86, 8.24, 2.65, 4.12][i] ?? 0) + client * 0.12;
@@ -51,13 +54,14 @@ export function pageHead(title: string, description: string) {
   return { meta: [{ title: `${title} — AVQIX` }, { name: 'description', content: description }, { property: 'og:title', content: `${title} — AVQIX` }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }] };
 }
 
-export type RecoArea = 'keywords' | 'google' | 'meta';
+export type RecoArea = 'keywords' | 'google' | 'meta' | 'crm';
 export const recoAreas: { id: RecoArea; name: string }[] = [
   { id: 'keywords', name: 'Klíčová slova' },
   { id: 'google', name: 'Google Ads' },
   { id: 'meta', name: 'Meta Ads' },
+  { id: 'crm', name: 'Leady a CRM' },
 ];
-export type Recommendation = { id: string; area: RecoArea; priority: 'Vysoká' | 'Střední' | 'Nízká'; title: string; insight: string; action: string; recipient: string; audience: 'Interní' | 'Klient'; impact: string };
+export type Recommendation = { id: string; area: RecoArea; priority: 'Vysoká' | 'Střední' | 'Nízká'; title: string; insight: string; action: string; recipient: string; audience: 'Interní' | 'Klient'; impact: string; confidence?: 'Vysoká' | 'Střední' | 'Nízká' };
 export function getKeywords(client: number, period: string) {
   const { multiplier } = getAnalytics(client, period);
   const brand = (clients[client] ?? clients[0]).toLowerCase();
@@ -76,7 +80,7 @@ export function getKeywords(client: number, period: string) {
     return { ...k, clicks, impressions, position, ctr, change: i + 2, opportunity };
   });
 }
-export function getRecommendations(client: number, period: string): Recommendation[] {
+function ecommerceRecommendations(client: number, period: string): Recommendation[] {
   const data = getAnalytics(client, period);
   const kw = getKeywords(client, period);
   const name = clients[client] ?? clients[0];
@@ -98,36 +102,88 @@ export function getRecommendations(client: number, period: string): Recommendati
   ];
 }
 
-export type Kpi = { label: string; value: string; change: string; note: string; accent?: boolean; down?: boolean; neutral?: boolean };
+export type Kpi = { code: KpiCode; label: string; value: string; change: string; note: string; accent?: boolean; down?: boolean; neutral?: boolean };
 const dec = (v: number, d = 2) => v.toFixed(d).replace('.', ',');
-/** KPI tiles for the selected client's business model (deterministic demo data). */
-export function getModelKpis(client: number, period: string): Kpi[] {
+/** All KPI values a demo client can show, computed from deterministic demo data. */
+function kpiCatalog(client: number, period: string): Record<KpiCode, Omit<Kpi, 'code'>> {
   const data = getAnalytics(client, period);
-  const model = demoClients[client]?.model ?? 'ecommerce';
   const m = data.multiplier;
-  if (model === 'hybrid') {
-    const leads = Math.round(412 * m), booked = Math.round(168 * m);
-    const services = Math.round(data.revenue * .64), shop = data.revenue - services;
-    return [
-      { label: 'Leady', value: number(leads), change: '+14,2 %', note: 'Formuláře a hovory' },
-      { label: 'Objednané konzultace', value: number(booked), change: '+9,8 %', note: `${dec(booked / leads * 100, 1)} % z leadů`, accent: true },
-      { label: 'Cena za objednávku', value: money(data.spend * .6 / booked), change: '−6,4 %', note: 'Náklady na konzultaci', down: true },
-      { label: 'Tržby služeb', value: money(services), change: '+11,3 %', note: `E-shop ${money(shop)} · ROAS e-shopu ${dec(shop / (data.spend * .4))}×` },
-    ];
-  }
-  if (model === 'b2b') {
-    const inquiries = Math.round(96 * m), qualified = Math.round(38 * m), won = Math.round(9 * m);
-    return [
-      { label: 'Poptávky', value: number(inquiries), change: '+12,5 %', note: 'Formuláře a e-maily' },
-      { label: 'Kvalifikované příležitosti', value: number(qualified), change: '+8,1 %', note: `${dec(qualified / inquiries * 100, 1)} % z poptávek`, accent: true },
-      { label: 'Hodnota pipeline', value: money(qualified * 412000), change: '+21,4 %', note: 'Otevřené nabídky' },
-      { label: 'Uzavřené zakázky', value: number(won), change: '+2', note: `Hodnota ${money(won * 386000)}` },
-    ];
-  }
+  const model = clientModel(client);
+  const shopShare = model === 'hybrid' ? .36 : model === 'ecommerce' ? 1 : 0;
+  const leads = Math.round((model === 'services' ? 260 : 412) * m);
+  const booked = Math.round((model === 'services' ? 118 : 168) * m);
+  const leadSpend = data.spend * (model === 'hybrid' ? .6 : 1);
+  const serviceRevenue = Math.round(data.revenue * (1 - shopShare));
+  const shopRevenue = Math.round(data.revenue * shopShare);
+  const shopSpend = data.spend * (model === 'hybrid' ? .4 : 1);
+  const inquiries = Math.round(96 * m), qualified = Math.round(38 * m), won = Math.round(9 * m);
+  const totalMarketing = data.spend * 1.18;
+  return {
+    revenue: { label: 'Celkové tržby', value: money(data.revenue), change: '+18,6 %', note: 'vs. předchozí období' },
+    spend: { label: 'Náklady na reklamu', value: money(data.spend), change: '+5,5 %', note: 'vs. předchozí období', neutral: true },
+    roas: { label: 'ROAS', value: dec(data.revenue / data.spend) + '×', change: '+12,4 %', note: 'vs. předchozí období', accent: true },
+    pno: { label: 'PNO', value: dec(data.spend / data.revenue * 100) + ' %', change: '−2,28 %', note: 'vs. předchozí období', down: true },
+    mer: { label: 'MER', value: dec(data.revenue / totalMarketing) + '×', change: '+4,1 %', note: 'Tržby / všechny náklady na marketing' },
+    aov: { label: 'Průměrná objednávka', value: money(data.revenue / data.conversions), change: '+5,2 %', note: 'AOV' },
+    returning: { label: 'Vracející se zákazníci', value: model === 'hybrid' ? '31,4 %' : '27,8 %', change: '+1,6 %', note: 'Podíl opakovaných nákupů' },
+    leads: { label: 'Leady', value: number(leads), change: '+14,2 %', note: 'Formuláře a hovory' },
+    booked: { label: 'Objednané konzultace', value: number(booked), change: '+9,8 %', note: `${dec(booked / leads * 100, 1)} % z leadů`, accent: true },
+    bookingRate: { label: 'Podíl objednaných', value: dec(booked / leads * 100, 1) + ' %', change: '−1,2 %', note: 'Objednané / leady', down: true },
+    costPerBooking: { label: 'Cena za objednávku', value: money(leadSpend / booked), change: '−6,4 %', note: 'Náklady na konzultaci', down: true },
+    responseTime: { label: 'Doba reakce na lead', value: model === 'services' ? '3,4 h' : '2,1 h', change: '+0,8 h', note: 'Medián do prvního kontaktu', neutral: true },
+    capacity: { label: 'Obsazenost kapacity', value: model === 'services' ? '68 %' : '74 %', change: '+6 %', note: 'Termíny na 3 týdny dopředu' },
+    serviceRevenue: { label: 'Tržby služeb', value: money(serviceRevenue), change: '+11,3 %', note: 'Realizované zákroky' },
+    shopRevenue: { label: 'Tržby e-shopu', value: money(shopRevenue), change: '+16,9 %', note: 'Kosmetika a poukazy' },
+    shopRoas: { label: 'ROAS e-shopu', value: dec(shopRevenue / shopSpend) + '×', change: '+8,2 %', note: 'Tržby e-shopu / náklady' },
+    inquiries: { label: 'Poptávky', value: number(inquiries), change: '+12,5 %', note: 'Formuláře a e-maily' },
+    qualified: { label: 'Kvalifikované příležitosti', value: number(qualified), change: '+8,1 %', note: `${dec(qualified / inquiries * 100, 1)} % z poptávek`, accent: true },
+    pipeline: { label: 'Hodnota pipeline', value: money(qualified * 412000), change: '+21,4 %', note: 'Otevřené nabídky' },
+    won: { label: 'Uzavřené zakázky', value: number(won), change: '+2', note: `Hodnota ${money(won * 386000)}` },
+    cycle: { label: 'Délka obchodního cyklu', value: '47 dní', change: '−3 dny', note: 'Od poptávky po podpis', down: true },
+  };
+}
+/** KPI tiles for the selected client, in the order set by its business model config. */
+export function getModelKpis(client: number, period: string): Kpi[] {
+  const catalog = kpiCatalog(client, period);
+  return clientConfig(client).kpis.map(code => ({ code, ...catalog[code] }));
+}
+
+type Reco = Recommendation;
+const rec = (r: Reco) => r;
+function servicesRecommendations(client: number, period: string, prefix = 's'): Reco[] {
+  const k = kpiCatalog(client, period);
   return [
-    { label: 'Celkové tržby', value: money(data.revenue), change: '+18,6 %', note: 'vs. předchozí období' },
-    { label: 'Náklady na reklamu', value: money(data.spend), change: '+5,5 %', note: 'vs. předchozí období', neutral: true },
-    { label: 'ROAS', value: dec(data.revenue / data.spend) + '×', change: '+12,4 %', note: 'vs. předchozí období', accent: true },
-    { label: 'PNO', value: dec(data.spend / data.revenue * 100) + ' %', change: '−2,28 %', note: 'vs. předchozí období', down: true },
+    rec({ id: `${prefix}1`, area: 'meta', priority: 'Vysoká', confidence: 'Střední', title: 'Levné leady, které se neobjednávají', insight: `Leadů přibylo, ale podíl objednaných je ${k.bookingRate.value}. Kampaň optimalizuje na vyplněný formulář, ne na objednávku.`, action: 'Optimalizovat na událost „objednáno“ a do formuláře přidat otázku na termín a zákrok.', recipient: 'Performance specialista', audience: 'Interní', impact: 'Méně leadů, více objednávek' }),
+    rec({ id: `${prefix}2`, area: 'crm', priority: 'Vysoká', confidence: 'Vysoká', title: 'Nejdřív rychlost reakce, pak rozpočet', insight: `Medián reakce na lead je ${k.responseTime.value}. Leady, kterým se nikdo neozve do 2 hodin, se objednávají výrazně méně.`, action: 'Nastavit upozornění pro recepci a pravidlo zavolat do 1 hodiny v pracovní době. Rozpočet zatím nenavyšovat.', recipient: 'Vedoucí recepce klienta', audience: 'Klient', impact: 'Vyšší podíl objednaných bez dalších nákladů' }),
+    rec({ id: `${prefix}3`, area: 'google', priority: 'Střední', confidence: 'Střední', title: 'Volné termíny na 2 týdny dopředu', insight: `Obsazenost je ${k.capacity.value}. Volné termíny jsou hlavně v úterý a středu dopoledne.`, action: 'Vyhledávací kampaň na nejžádanější službu a SMS vychladlým leadům s nabídkou konkrétních termínů.', recipient: 'PPC specialista', audience: 'Interní', impact: 'Doplnění volných termínů' }),
+    rec({ id: `${prefix}4`, area: 'crm', priority: 'Střední', confidence: 'Vysoká', title: 'Připomenout opakovanou službu', insight: 'Část klientů má podle intervalu služby nárok na další termín v příštích 14 dnech.', action: 'Automatický e-mail a SMS s odkazem na rezervaci 14 dní před doporučeným termínem.', recipient: 'CRM specialista', audience: 'Interní', impact: 'Opakované objednávky bez reklamy' }),
+    rec({ id: `${prefix}5`, area: 'keywords', priority: 'Nízká', confidence: 'Nízká', title: 'Stránky služeb pro dotazy s cenou', insight: 'Lidé hledají služby spolu se slovem „cena“. Web na tyto dotazy nemá samostatné stránky.', action: 'Doplnit ke každé hlavní službě stránku s orientační cenou, průběhem a FAQ.', recipient: 'SEO specialista', audience: 'Interní', impact: 'Více organických poptávek' }),
+  ];
+}
+function b2bRecommendations(client: number, period: string): Reco[] {
+  const k = kpiCatalog(client, period);
+  return [
+    rec({ id: 'b1', area: 'meta', priority: 'Vysoká', confidence: 'Střední', title: 'Poptávky bez kvalifikace', insight: `Kvalifikovaných je jen ${k.qualified.note}. Formulář propouští malé a nerelevantní zakázky.`, action: 'Přidat do formuláře rozsah projektu a termín realizace, nekvalifikované poptávky vyřazovat z optimalizace.', recipient: 'Performance specialista', audience: 'Interní', impact: 'Vyšší podíl kvalifikovaných poptávek' }),
+    rec({ id: 'b2', area: 'google', priority: 'Střední', confidence: 'Střední', title: 'Dlouhý obchodní cyklus', insight: `Od poptávky po podpis uplyne ${k.cycle.value}. Rozhodovatelé mezitím porovnávají dodavatele.`, action: 'Remarketing s referencemi a případovými studiemi pro firmy, které poslaly poptávku za posledních 60 dní.', recipient: 'PPC specialista', audience: 'Interní', impact: 'Kratší cyklus, vyšší konverze nabídek' }),
+    rec({ id: 'b3', area: 'crm', priority: 'Vysoká', confidence: 'Nízká', title: 'Kanál s poptávkami bez zakázek', insight: 'Jeden kanál přináší hodně poptávek, ale v CRM u něj není žádná uzavřená zakázka. Může jít i o chybějící zdroj v CRM.', action: 'Nejdřív ověřit, že obchodníci vyplňují zdroj poptávky. Pak teprve rozhodnout o rozpočtu kanálu.', recipient: 'Obchodní ředitel klienta', audience: 'Klient', impact: 'Spolehlivé rozhodování o rozpočtu' }),
+  ];
+}
+/** Recommendation scenarios differ by business model; e-commerce keeps the original set. */
+export function getRecommendations(client: number, period: string): Recommendation[] {
+  const model = clientModel(client);
+  if (model === 'services') return servicesRecommendations(client, period);
+  if (model === 'b2b') return b2bRecommendations(client, period);
+  const shop = ecommerceRecommendations(client, period).map(r => ({ ...r, confidence: r.confidence ?? (r.priority === 'Vysoká' ? 'Vysoká' as const : 'Střední' as const) }));
+  if (model === 'hybrid') return [
+    ...servicesRecommendations(client, period, 'h').slice(0, 4),
+    ...shop.filter(r => ['g2', 'g3', 'm2'].includes(r.id)),
+    rec({ id: 'h9', area: 'crm', priority: 'Střední', confidence: 'Střední', title: 'Cross-sell kosmetiky klientům služeb', insight: 'Většina klientů po zákroku v e-shopu nenakoupila doporučenou domácí péči.', action: 'E-mail 3 dny po zákroku s péčí doporučenou k danému zákroku.', recipient: 'CRM specialista', audience: 'Interní', impact: 'Vyšší tržby e-shopu a LTV klienta' }),
+  ];
+  const k = kpiCatalog(client, period);
+  return [
+    ...shop,
+    rec({ id: 'e1', area: 'google', priority: 'Střední', confidence: 'Střední', title: 'Hlídat MER, ne jen ROAS v reklamách', insight: `MER je ${k.mer.value}, zatímco ROAS v reklamních systémech ${k.roas.value}. Kanály si část tržeb připisují dvakrát.`, action: 'O celkovém rozpočtu rozhodovat podle MER, o jednotlivých kanálech podle trendu.', recipient: 'Andrea', audience: 'Interní', impact: 'Rozpočet podle skutečné návratnosti' }),
+    rec({ id: 'e2', area: 'crm', priority: 'Střední', confidence: 'Vysoká', title: 'E-mail po prvním nákupu', insight: `Vracející se zákazníci tvoří ${k.returning.value}. Po prvním nákupu nepřichází žádná automatizace.`, action: 'Série 3 e-mailů po prvním nákupu: péče o produkt, doporučení, sleva na druhý nákup.', recipient: 'CRM specialista', audience: 'Interní', impact: 'Vyšší podíl opakovaných nákupů' }),
+    rec({ id: 'e3', area: 'meta', priority: 'Nízká', confidence: 'Střední', title: 'Připravit Black Friday a Vánoce', insight: 'Za 5 týdnů začíná nejsilnější sezóna roku a kreativy na ni zatím nejsou.', action: 'Do 2 týdnů připravit kreativy a publika, rozpočet navyšovat postupně od začátku listopadu.', recipient: 'Performance specialista', audience: 'Interní', impact: 'Plynulý náběh sezóny' }),
   ];
 }
