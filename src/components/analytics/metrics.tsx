@@ -1,7 +1,7 @@
 import { ArrowUpRight, ArrowDownRight, Info } from 'lucide-react';
 import { LineChart, Line, ResponsiveContainer } from 'recharts';
 import { useWorkspace } from './workspace';
-import { getAnalytics, money, number } from '@/lib/analytics-data';
+import { getAnalytics, getModelKpis, money, number, type Kpi } from '@/lib/analytics-data';
 export function Metrics({ mode = 'overview' }: { mode?: string }) {
  const { client, period } = useWorkspace(); const data = getAnalytics(client, period);
  const items = mode === 'organic' ? [

@@ -2,7 +2,14 @@ import skincare from '@/assets/creative-skincare.jpg';
 import interior from '@/assets/creative-interior.jpg';
 import sneaker from '@/assets/creative-sneaker.jpg';
 
-export const clients = ['Greenly Store', 'Forma Studio', 'Step & Co.'] as const;
+export type BusinessModel = 'ecommerce' | 'hybrid' | 'b2b';
+export const modelLabels: Record<BusinessModel, string> = { ecommerce: 'E-commerce', hybrid: 'Hybrid · služby + e-shop', b2b: 'B2B' };
+export const demoClients = [
+  { name: 'Greenly Store', model: 'ecommerce', monogram: 'g.', isDemo: true },
+  { name: 'Klinika Aurea', model: 'hybrid', monogram: 'a.', isDemo: true },
+  { name: 'Fasada Pro', model: 'b2b', monogram: 'f.', isDemo: true },
+] as const satisfies readonly { name: string; model: BusinessModel; monogram: string; isDemo: true }[];
+export const clients = demoClients.map(c => c.name);
 export const creativeImages = [skincare, interior, sneaker];
 export const money = (value: number) => new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 0 }).format(value) + ' Kč';
 export const number = (value: number) => new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 0 }).format(value);
@@ -26,7 +33,7 @@ export function getAnalytics(client: number, period: string) {
     day.spend = Math.round(day.spend / rawSpend * spend);
     day.previous = Math.round(day.previous / rawRevenue * revenue / 1.186);
   });
-  const names = client === 0 ? ['Podzimní kolekce · Sales', 'Bestsellery · Advantage+', 'Remarketing · 30 dní', 'Brand · Vyhledávání', 'Nová kolekce · PMax', 'Newsletter · Září', 'Prospecting · Video', 'Brand · Shopping'] : client === 1 ? ['Nová kolekce · Interiéry', 'Designové křeslo · Sales', 'Remarketing · Studio', 'Brand · Vyhledávání', 'Podzim · PMax', 'Newsletter · Design', 'Inspirace · Video', 'Brand · Shopping'] : ['Nová sezóna · Sales', 'Everyday sneakers · Sales', 'Remarketing · 30 dní', 'Brand · Vyhledávání', 'Performance · PMax', 'Newsletter · Novinky', 'Movement · Video', 'Brand · Shopping'];
+  const names = client === 0 ? ['Podzimní kolekce · Sales', 'Bestsellery · Advantage+', 'Remarketing · 30 dní', 'Brand · Vyhledávání', 'Nová kolekce · PMax', 'Newsletter · Září', 'Prospecting · Video', 'Brand · Shopping'] : client === 1 ? ['Konzultace zdarma · Leady', 'Kosmetika · Sales', 'Remarketing · Klinika', 'Brand · Vyhledávání', 'E-shop · PMax', 'Newsletter · Péče', 'Ošetření · Video', 'Kosmetika · Shopping'] : ['Zateplení fasád · Leady', 'Developeři · LinkedIn', 'Remarketing · Reference', 'Brand · Vyhledávání', 'Poptávky · PMax', 'Newsletter · Projekty', 'Realizace · Video', 'Služby · Vyhledávání'];
   const rows = names.map((name, i) => {
     const rowSpend = Math.round(([32450, 28120, 18760, 12350, 16480, 2800, 8500, 5200][i] ?? 0) * multiplier);
     const roas = ([5.82, 5.24, 6.18, 7.42, 3.86, 8.24, 2.65, 4.12][i] ?? 0) + client * 0.12;
@@ -41,7 +48,7 @@ export function downloadCsv(filename: string, headers: string[], rows: (string |
   const link = document.createElement('a'); link.href = url; link.download = filename; link.click(); URL.revokeObjectURL(url);
 }
 export function pageHead(title: string, description: string) {
-  return { meta: [{ title: `${title} — ANDREA AI OS` }, { name: 'description', content: description }, { property: 'og:title', content: `${title} — ANDREA AI OS` }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }] };
+  return { meta: [{ title: `${title} — AVQIX` }, { name: 'description', content: description }, { property: 'og:title', content: `${title} — AVQIX` }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }] };
 }
 
 export type RecoArea = 'keywords' | 'google' | 'meta';
@@ -88,5 +95,39 @@ export function getRecommendations(client: number, period: string): Recommendati
     { id: 'm1', area: 'meta', priority: 'Vysoká', title: `Přesunout rozpočet do ${best.source === 'Meta Ads' ? best.name : r[2]!.name}`, insight: `Remarketing dosahuje ROAS ${r[2]!.roas.toFixed(2).replace('.', ',')}× oproti ${worst.roas.toFixed(2).replace('.', ',')}× u ${worst.name}.`, action: `Převést 20 % rozpočtu z kampaně ${worst.name}.`, recipient: 'Performance specialista', audience: 'Interní', impact: `+${money(worst.spend * .2 * (r[2]!.roas - worst.roas))} tržeb` },
     { id: 'm2', area: 'meta', priority: 'Střední', title: 'Obnovit kreativy v prospectingu', insight: `CTR ${worst.ctr.toFixed(2).replace('.', ',')} % – kreativy jsou unavené.`, action: 'Připravit 3 nová videa 9:16 s produktem v prvních 3 s.', recipient: 'Grafik / video tvůrce', audience: 'Interní', impact: 'Nižší CPC' },
     { id: 'm3', area: 'meta', priority: 'Nízká', title: 'Dodat nové produktové fotky', insight: 'Nejlepší výkon mají reálné fotky z prostředí.', action: 'Nafotit 10 lifestyle fotografií nové kolekce.', recipient: 'Klient', audience: 'Klient', impact: 'Lepší výkon kreativ' },
+  ];
+}
+
+export type Kpi = { label: string; value: string; change: string; note: string; accent?: boolean; down?: boolean; neutral?: boolean };
+const dec = (v: number, d = 2) => v.toFixed(d).replace('.', ',');
+/** KPI tiles for the selected client's business model (deterministic demo data). */
+export function getModelKpis(client: number, period: string): Kpi[] {
+  const data = getAnalytics(client, period);
+  const model = demoClients[client]?.model ?? 'ecommerce';
+  const m = data.multiplier;
+  if (model === 'hybrid') {
+    const leads = Math.round(412 * m), booked = Math.round(168 * m);
+    const services = Math.round(data.revenue * .64), shop = data.revenue - services;
+    return [
+      { label: 'Leady', value: number(leads), change: '+14,2 %', note: 'Formuláře a hovory' },
+      { label: 'Objednané konzultace', value: number(booked), change: '+9,8 %', note: `${dec(booked / leads * 100, 1)} % z leadů`, accent: true },
+      { label: 'Cena za objednávku', value: money(data.spend * .6 / booked), change: '−6,4 %', note: 'Náklady na konzultaci', down: true },
+      { label: 'Tržby služeb', value: money(services), change: '+11,3 %', note: `E-shop ${money(shop)} · ROAS e-shopu ${dec(shop / (data.spend * .4))}×` },
+    ];
+  }
+  if (model === 'b2b') {
+    const inquiries = Math.round(96 * m), qualified = Math.round(38 * m), won = Math.round(9 * m);
+    return [
+      { label: 'Poptávky', value: number(inquiries), change: '+12,5 %', note: 'Formuláře a e-maily' },
+      { label: 'Kvalifikované příležitosti', value: number(qualified), change: '+8,1 %', note: `${dec(qualified / inquiries * 100, 1)} % z poptávek`, accent: true },
+      { label: 'Hodnota pipeline', value: money(qualified * 412000), change: '+21,4 %', note: 'Otevřené nabídky' },
+      { label: 'Uzavřené zakázky', value: number(won), change: '+2', note: `Hodnota ${money(won * 386000)}` },
+    ];
+  }
+  return [
+    { label: 'Celkové tržby', value: money(data.revenue), change: '+18,6 %', note: 'vs. předchozí období' },
+    { label: 'Náklady na reklamu', value: money(data.spend), change: '+5,5 %', note: 'vs. předchozí období', neutral: true },
+    { label: 'ROAS', value: dec(data.revenue / data.spend) + '×', change: '+12,4 %', note: 'vs. předchozí období', accent: true },
+    { label: 'PNO', value: dec(data.spend / data.revenue * 100) + ' %', change: '−2,28 %', note: 'vs. předchozí období', down: true },
   ];
 }
