@@ -14,3 +14,14 @@ describe('Marketing sample data', () => {
   expect(data.chart.at(-1)?.date).toContain('30. 9.');
  });
 });
+import { demoClients, getModelKpis } from '@/lib/analytics-data';
+describe('Business models', () => {
+ it('has three demo clients with their models', () => {
+  expect(demoClients.map(c => [c.name, c.model, c.isDemo])).toEqual([['Greenly Store','ecommerce',true],['Klinika Aurea','hybrid',true],['Fasada Pro','b2b',true]]);
+ });
+ it('shows KPI tiles per model', () => {
+  expect(getModelKpis(0,'30').map(k=>k.label)).toEqual(['Celkové tržby','Náklady na reklamu','ROAS','PNO']);
+  expect(getModelKpis(1,'30').map(k=>k.label)).toEqual(['Leady','Objednané konzultace','Cena za objednávku','Tržby služeb']);
+  expect(getModelKpis(2,'30').map(k=>k.label)).toEqual(['Poptávky','Kvalifikované příležitosti','Hodnota pipeline','Uzavřené zakázky']);
+ });
+});
