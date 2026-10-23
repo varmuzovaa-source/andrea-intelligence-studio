@@ -79,10 +79,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ANDREA AI OS" },
+      { title: "AVQIX" },
       { name: "description", content: "Marketing Intelligence — přehled marketingového výkonu" },
-      { name: "author", content: "ANDREA AI OS" },
-      { property: "og:title", content: "ANDREA AI OS" },
+      { name: "author", content: "AVQIX" },
+      { property: "og:title", content: "AVQIX" },
       { property: "og:description", content: "Marketing Intelligence — přehled marketingového výkonu" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

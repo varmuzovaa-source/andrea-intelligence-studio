@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as KampaneRouteImport } from './routes/kampane'
+import { Route as KlientiRouteImport } from './routes/klienti'
 import { Route as NastaveniRouteImport } from './routes/nastaveni'
 import { Route as OrganikaRouteImport } from './routes/organika'
 import { Route as ProfilRouteImport } from './routes/profil'
@@ -25,6 +26,11 @@ const IndexRoute = IndexRouteImport.update({
 const KampaneRoute = KampaneRouteImport.update({
   id: '/kampane',
   path: '/kampane',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KlientiRoute = KlientiRouteImport.update({
+  id: '/klienti',
+  path: '/klienti',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NastaveniRoute = NastaveniRouteImport.update({
@@ -56,6 +62,7 @@ const WebRoute = WebRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/kampane': typeof KampaneRoute
+  '/klienti': typeof KlientiRoute
   '/nastaveni': typeof NastaveniRoute
   '/organika': typeof OrganikaRoute
   '/profil': typeof ProfilRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/kampane': typeof KampaneRoute
+  '/klienti': typeof KlientiRoute
   '/nastaveni': typeof NastaveniRoute
   '/organika': typeof OrganikaRoute
   '/profil': typeof ProfilRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/kampane': typeof KampaneRoute
+  '/klienti': typeof KlientiRoute
   '/nastaveni': typeof NastaveniRoute
   '/organika': typeof OrganikaRoute
   '/profil': typeof ProfilRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/kampane'
+    | '/klienti'
     | '/nastaveni'
     | '/organika'
     | '/profil'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/kampane'
+    | '/klienti'
     | '/nastaveni'
     | '/organika'
     | '/profil'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/kampane'
+    | '/klienti'
     | '/nastaveni'
     | '/organika'
     | '/profil'
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   KampaneRoute: typeof KampaneRoute
+  KlientiRoute: typeof KlientiRoute
   NastaveniRoute: typeof NastaveniRoute
   OrganikaRoute: typeof OrganikaRoute
   ProfilRoute: typeof ProfilRoute
@@ -135,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/kampane'
       fullPath: '/kampane'
       preLoaderRoute: typeof KampaneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/klienti': {
+      id: '/klienti'
+      path: '/klienti'
+      fullPath: '/klienti'
+      preLoaderRoute: typeof KlientiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/nastaveni': {
@@ -178,6 +198,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   KampaneRoute: KampaneRoute,
+  KlientiRoute: KlientiRoute,
   NastaveniRoute: NastaveniRoute,
   OrganikaRoute: OrganikaRoute,
   ProfilRoute: ProfilRoute,
