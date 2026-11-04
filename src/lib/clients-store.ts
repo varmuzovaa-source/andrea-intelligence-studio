@@ -47,4 +47,5 @@ export const clientsStore = {
   reset() { commit([], false); },
 };
 
-export const useCustomClients = () => useSyncExternalStore(clientsStore.subscribe, clientsStore.get, () => []);
+const EMPTY: CustomClient[] = [];
+export const useCustomClients = () => useSyncExternalStore(clientsStore.subscribe, clientsStore.get, () => EMPTY);
