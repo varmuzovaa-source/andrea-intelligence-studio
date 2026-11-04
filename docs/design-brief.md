@@ -1,4 +1,4 @@
-# Andrea Intelligence Studio
+# Designový záměr (původní zadání)
 
 ==================================================
 DESIGN SYSTEM & UX DIRECTION — HIGH PRIORITY
