@@ -14,5 +14,5 @@ if [ ! -d node_modules ]; then
 fi
 
 echo "Spouštím AVQIX na http://localhost:5173 (ukončíte klávesami Ctrl+C)"
-( sleep 4; command -v open >/dev/null 2>&1 && open "http://localhost:5173/search-console" ) &
+( sleep 4; command -v open >/dev/null 2>&1 && open "http://localhost:5173/klienti" ) &
 npm run dev -- --port 5173
