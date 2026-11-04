@@ -13,6 +13,8 @@ if [ ! -d node_modules ]; then
   npm install --no-audit --no-fund
 fi
 
+# Zapne tlačítko „Aktualizovat z Fachmana“ (funguje jen u lokálního spuštění).
+export AVQIX_LOCAL=1
 echo "Spouštím AVQIX na http://localhost:5173 (ukončíte klávesami Ctrl+C)"
 ( sleep 4; command -v open >/dev/null 2>&1 && open "http://localhost:5173/klienti" ) &
 npm run dev -- --port 5173

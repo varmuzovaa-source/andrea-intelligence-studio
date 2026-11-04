@@ -43,7 +43,7 @@ table{width:100%;border-collapse:collapse;font-size:9pt;margin:2mm 0}th,td{text-
 <tr><td>Obchodní cíl (co chce firma)</td><td><span class="where">Cíle a rady → Cíle klienta</span></td><td>Zaplnit volné termíny na příští měsíc</td></tr>
 <tr><td>Marketingový cíl (co má dělat marketing)</td><td><span class="where">Cíle a rady → Cíle klienta</span></td><td>Víc objednaných konzultací za rozumnou cenu</td></tr>
 <tr><td>Číslo (KPI): co měřit, cílová hodnota, období, kanál</td><td><span class="where">Cíle a rady → Přidat číslo (KPI)</span></td><td>Cena za objednanou konzultaci ≤ 250 Kč · měsíc · Všechny kanály</td></tr>
-<tr><td>ID reklamních účtů</td><td><span class="where">Terminál (příkaz v kroku 5)</span></td><td>Google Ads: 123-456-7890 · Meta: act_123456</td></tr>
+<tr><td>ID reklamních účtů</td><td><span class="where">Cíle a rady → Napojení na reklamní účty</span></td><td>Google Ads: 123-456-7890 · Meta: act_123456</td></tr>
 <tr><td>Kdo úkol řeší, jak je daleko</td><td><span class="where">Úkoly týmu</span></td><td>Řeší: Eva · stav Rozděláno</td></tr>
 </table>
 
@@ -53,12 +53,12 @@ table{width:100%;border-collapse:collapse;font-size:9pt;margin:2mm 0}th,td{text-
 <div class="step"><div class="num">1</div><div><h3>Spusť appku</h3><p><b>Nejjednodušeji:</b> ve Finderu otevři složku <code>AGENTURA/AVIX</code> a dvakrát klikni na <code>Spustit-AVQIX.command</code>. Otevře se okno Terminálu a po chvilce webový prohlížeč s appkou.</p><p>Nebo v aplikaci Terminál: <code>cd ~/AGENTURA/AVIX</code> a pak <code>./start.sh</code>. Appka běží na adrese <code>http://localhost:5173</code>. Okno Terminálu nech otevřené, dokud appku používáš. Zavřeš ho = appka se vypne.</p></div></div>
 <div class="step"><div class="num">2</div><div><h3>Přidej klienta</h3><p><span class="where">Klienti</span> → vyplň název a typ → <b>Přidat klienta</b>. Otevře se rovnou stránka Cíle a rady. Klient začíná prázdný, žádná vymyšlená čísla.</p></div></div>
 <div class="step"><div class="num">3</div><div><h3>Zadej cíle</h3><p><span class="where">Cíle a rady</span> → napiš obchodní a marketingový cíl → <b>Přidat číslo (KPI)</b> → vyber, co měřit (u každého je vysvětlení), cílovou hodnotu, období a kanál → <b>Uložit cíle</b>.</p><p>Chceš, aby je znal i Fachman? <b>Zkopírovat pro Fachmana</b> a vlož do části „2. Cíle (KPI)“ souboru <code>ppc.md</code> klienta.</p></div></div>
-<div class="step"><div class="num">4</div><div><h3>Připrav ID účtů</h3><p>Google Ads: ID klienta (10 číslic, např. 123-456-7890). Meta: ID reklamního účtu (<code>act_…</code>). Stačí jedno z nich.</p></div></div>
-<div class="step"><div class="num">5</div><div><h3>Stáhni čísla přes Fachmana</h3><p>V novém okně terminálu (aplikace Terminál, ne Claude Code; ve složce AVIX; <code>klient</code> = jméno složky, které ukazuje stránka Cíle a rady):</p><pre>python3 scripts/most_fachman.py klient --google 123-456-7890 --meta act_123456 --dny 30</pre><p>Skript jen čte a uloží soubory do složky <code>data-most</code>. Období: 7, 30 nebo 90 dní. <b>Použij stejné období, jaké máš u cílů.</b></p></div></div>
-<div class="step"><div class="num">6</div><div><h3>Nahraj soubory do AVQIX</h3><p><span class="where">Datové zdroje</span> → karta <b>Fachman (PPC)</b> → vyber klienta → <b>Vybrat soubory z data-most</b> → označ oba soubory.</p></div></div>
+<div class="step"><div class="num">4</div><div><h3>Doplň ID účtů a stáhni čísla jedním klikem</h3><p><span class="where">Cíle a rady</span> → blok <b>Napojení na reklamní účty</b> → vyplň Google Ads ID (např. 123-456-7890) a/nebo Meta ID (<code>act_123456</code>) → vyber období → <b>Aktualizovat z Fachmana</b>. Appka sama zavolá Fachmana, stáhne čerstvá čísla a načte je. Při prvním otevření klienta se to udělá samo.</p><p>Chceš nová čísla? Klikni znovu. Pod tlačítkem vidíš, kdy byla data stažena. <b>Období stahování dej stejné jako u cílů.</b></p></div></div>
+<div class="step"><div class="num">5</div><div><h3>(Záloha) Ruční cesta</h3><p>Funguje to jen když appku spouštíš přes <code>Spustit-AVQIX.command</code>. Kdyby tlačítko nešlo, v Terminálu: <code>python3 scripts/most_fachman.py klient --google 123-456-7890 --dny 30</code> a soubory z <code>data-most</code> nahraj v <span class="where">Datové zdroje → Fachman</span>.</p></div></div>
+<div class="step"><div class="num">6</div><div><h3>Hotovo, čti výsledek</h3><p>Stránka <span class="where">Cíle a rady</span> se přepočítá hned po načtení čísel.</p></div></div>
 <div class="step"><div class="num">7</div><div><h3>Čti výsledek a předávej úkoly</h3><p><span class="where">Cíle a rady</span> → nahoře „Jak daleko jsme“, dole „Co udělat“. U rady, kterou chceš řešit, klikni <b>Předat</b>. Úkol najdeš v <span class="where">Úkoly týmu</span>, tam doplníš, kdo ho řeší, a posouváš stav. <b>Export CSV</b> pošleš kolegům.</p></div></div>
 </div>
-<div class="box"><b>Chceš si to jen vyzkoušet bez klienta?</b> Ve složce <code>ukazka</code> jsou vymyšlená data. Přidej si zkušebního klienta a v kroku 6 nahraj oba soubory z té složky. Kroky 4 a 5 přeskoč.</div>
+<div class="box"><b>Chceš si to jen vyzkoušet bez klienta?</b> Ve složce <code>ukazka</code> jsou vymyšlená data. Přidej si zkušebního klienta a na stránce Datové zdroje → Fachman nahraj oba soubory z té složky. Krok 4 přeskoč.</div>
 
 <div class="break"></div>
 <h2>Jak číst výsledek</h2>
@@ -73,7 +73,7 @@ table{width:100%;border-collapse:collapse;font-size:9pt;margin:2mm 0}th,td{text-
 <h2>Když něco nejde</h2>
 <table>
 <tr><th>Co vidíš</th><th>Co s tím</th></tr>
-<tr><td>„Chybí data“ u cíle</td><td>Nahraj soubory z data-most (krok 6), nebo u Search Console cíle nahraj export.</td></tr>
+<tr><td>„Chybí data“ u cíle</td><td>Klikni Aktualizovat z Fachmana (krok 4), nebo u Search Console cíle nahraj export.</td></tr>
 <tr><td>„Jiné období“</td><td>Cíl je třeba na 30 dní a soubory jsou za 7. Stáhni znovu se stejným <code>--dny</code>.</td></tr>
 <tr><td>Skript napíše, že nenašel Fachmana</td><td>Fachman nemá nastavené prostředí (složka <code>.venv</code> v <code>~/AGENTURA/PPC</code>). Řekni to Claude Code ve složce PPC.</td></tr>
 <tr><td>Po obnovení stránky zmizela čísla z kampaní</td><td>Je to záměr (čísla se neukládají). Nahraj soubory znovu. Cíle, klienti a úkoly zůstávají.</td></tr>

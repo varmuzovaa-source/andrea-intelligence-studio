@@ -1,11 +1,13 @@
-import { useState } from 'react';
-import { Check, ClipboardCopy, Lightbulb, Plus, Send, Target, Trash2, Upload } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Check, ClipboardCopy, Lightbulb, Plus, RefreshCw, Send, Target, Trash2, Upload } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { PageHeader, SectionHeading } from './controls';
 import { CsvPicker } from './csv-picker';
 import { useWorkspace } from './workspace';
-import { clientConfig, clients, customClientOf } from '@/lib/analytics-data';
+import { clientConfig, clients, customClientOf, isCustomClient } from '@/lib/analytics-data';
+import { clientsStore, useCustomClients } from '@/lib/clients-store';
+import { liveAvailable, refreshFromFachman } from '@/lib/fachman-live';
 import { getCampaignData, useBridge } from '@/lib/campaign-data';
 import { defaultKpi, formatMetric, goalChannels, goalPeriods, goalsFromMarkdown, goalsToMarkdown, metricInfo, newGoalId, operatorOf, periodLabel, type ClientGoals, type GoalChannel, type GoalMetric, type GoalPeriod, type KpiGoal } from '@/lib/goals';
 import { goalsStore, useGoals } from '@/lib/goals-store';
@@ -40,6 +42,8 @@ export function GoalsPage() {
     <PageHeader title="Cíle a rady" description={`Co chce ${name} dosáhnout, jak daleko to je a co udělat u konkrétní kampaně.`} />
     {dataInfo.origin === 'none' ? <div className="info-banner"><Target size={18} /><span>Pro klienta {name} zatím nejsou žádná čísla z kampaní. Nejdřív si můžete nastavit cíle. Čísla získáte takto: ve složce AVIX spusťte <code>python3 scripts/most_fachman.py {slug} --google 123-456-7890 --meta act_123456 --dny 30</code> (ID účtů doplňte vlastní, stačí jen jedno) a soubory ze složky data-most nahrajte na stránce <Link to="/datove-zdroje" className="gsc-link">Datové zdroje</Link>.</span></div>
       : <div className="info-banner"><Target size={18} /><span>{dataLabel === 'Ukázková data' ? 'Zatím počítám s ukázkovými daty, žádná čísla nejsou skutečná. Skutečná čísla z Fachmana nahrajete na stránce ' : `${dataLabel} nahrazují ukázková čísla pro klienta ${name}. Další zdroje najdete na stránce `}<Link to="/datove-zdroje" className="gsc-link">Datové zdroje</Link>.</span></div>}
+
+    {isCustomClient(client) && <LiveConnect key={`live-${name}`} name={name} slug={slug} hasData={dataInfo.origin === 'fachman'} defaultDays={goals.kpis[0]?.periodDays ?? 30} />}
 
     <GoalForm key={name} name={name} goals={goals} model={model} />
 
@@ -122,3 +126,42 @@ function GoalForm({ name, goals, model }: { name: string; goals: ClientGoals; mo
 
 import { modelConfigs } from '@/lib/business-models';
 const clientConfigKeys = modelConfigs;
+
+function LiveConnect({ name, slug, hasData, defaultDays }: { name: string; slug: string; hasData: boolean; defaultDays: number }) {
+  useCustomClients();
+  const c = customClientOf(clients.indexOf(name));
+  const bridge = useBridge();
+  const [available, setAvailable] = useState<boolean | null>(null);
+  const [days, setDays] = useState<number>(defaultDays);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState('');
+  const auto = useRef(false);
+  const google = c?.googleId ?? '', meta = c?.metaId ?? '';
+  const fetchedAt = (bridge[name] ?? []).map(d => d.fetchedAt).filter(Boolean).sort().at(-1);
+  const run = async () => {
+    setBusy(true); setMsg('Stahuji data z Fachmana, může to trvat až minutu…');
+    const r = await refreshFromFachman(name, { slug, days, ...(google ? { google } : {}), ...(meta ? { meta } : {}) });
+    setBusy(false);
+    setMsg(r.ok ? `Hotovo, načteno: ${r.loaded.join(', ')}.` : r.error);
+  };
+  useEffect(() => { void liveAvailable().then(setAvailable); }, []);
+  // Fetch once when the client is opened and nothing is loaded yet (one call, never in a loop, to respect API limits).
+  useEffect(() => { if (available && !hasData && (google || meta) && !auto.current) { auto.current = true; void run(); } }, [available]); // eslint-disable-line react-hooks/exhaustive-deps
+  return <section className="reco-section">
+    <SectionHeading title="Napojení na reklamní účty" subtitle="Čísla se stáhnou z Fachmana jedním kliknutím" />
+    <div className="goal-form">
+      <div className="goal-text-grid">
+        <label>Google Ads ID (nepovinné)<input value={google} placeholder="123-456-7890" onChange={e => clientsStore.update(name, { googleId: e.target.value.trim() })} /></label>
+        <label>Meta Ads ID (nepovinné)<input value={meta} placeholder="act_123456" onChange={e => clientsStore.update(name, { metaId: e.target.value.trim() })} /></label>
+      </div>
+      {available === false && <p className="goal-help">Tlačítko funguje jen když appku spustíte přes Spustit-AVQIX na svém počítači. Tady můžete čísla nahrát ručně na stránce Datové zdroje.</p>}
+      {available && <div className="gsc-actions">
+        <label className="gsc-threshold">Období <select className="task-select" value={days} onChange={e => setDays(Number(e.target.value))}>{goalPeriods.map(p => <option key={p.days} value={p.days}>{p.label}</option>)}</select></label>
+        <Button size="sm" disabled={busy || (!google && !meta)} onClick={() => void run()}><RefreshCw />Aktualizovat z Fachmana</Button>
+        {!google && !meta && <span className="goal-help">Nejdřív doplňte aspoň jedno ID.</span>}
+      </div>}
+      {fetchedAt && <p className="goal-help">Data stažena: {new Date(fetchedAt).toLocaleString('cs-CZ')}. Jsou z tohoto okamžiku, dalším kliknutím se obnoví.</p>}
+      {msg && <p className="goal-help" role="status">{msg}</p>}
+    </div>
+  </section>;
+}

@@ -49,7 +49,7 @@ def main() -> None:
         f.write_text(text, encoding="utf-8"); ulozeno.append(f)
     print("Hotovo. Uloženo:")
     for f in ulozeno:
-        print("  ", f)
+        print("SOUBOR:", f)
     print("Teď v AVQIX: Datové zdroje -> Fachman -> Vybrat soubory z data-most.")
 
 

@@ -12,7 +12,7 @@ export const demoClients = [
 ] as const satisfies readonly { name: string; model: BusinessModel; monogram: string; isDemo: true }[];
 /** Demo clients first, then clients the user added (see clients-store). Mutated in place by setCustomClients. */
 export const clients: string[] = demoClients.map(c => c.name);
-export type CustomClient = { name: string; model: BusinessModel; slug: string };
+export type CustomClient = { name: string; model: BusinessModel; slug: string; googleId?: string; metaId?: string };
 let customList: CustomClient[] = [];
 export function setCustomClients(list: CustomClient[]) {
   customList = list;

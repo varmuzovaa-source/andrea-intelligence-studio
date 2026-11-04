@@ -41,6 +41,7 @@ export const clientsStore = {
     commit([...state, { name: clean, model, slug: finalSlug }]);
     return null;
   },
+  update(name: string, patch: Partial<Pick<CustomClient, 'googleId' | 'metaId'>>) { commit(state.map(c => (c.name === name ? { ...c, ...patch } : c))); },
   remove(name: string) { commit(state.filter(c => c.name !== name)); },
   /** Test helper. */
   reset() { commit([], false); },

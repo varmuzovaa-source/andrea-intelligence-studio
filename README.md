@@ -80,3 +80,5 @@ Původně vytvořeno v [Lovable](https://lovable.dev), dál vyvíjeno v repozit�
 Fachmana skript nijak nemění a nic nikam neposílá. Zatím se čtou kampaně z Google Ads a Meta Ads; e-mailing (ActiveCampaign aj.) zatím data nemá.
 
 **Vlastní klient:** na stránce **Klienti → Přidat klienta** zadáte název a typ podnikání. Klient začíná prázdný (žádná vymyšlená čísla), vidí jen Cíle a rady, Úkoly týmu, Search Console a Datové zdroje. Ukládá se jen v tomto prohlížeči. Na stránce Cíle a rady je pro něj hotový příkaz pro Fachmana.
+
+**Aktualizace jedním klikem:** když appku spustíte přes `./start.sh` (nebo `Spustit-AVQIX.command`), na stránce Cíle a rady u vlastního klienta je tlačítko **Aktualizovat z Fachmana**. Doplňte ID účtů, klikněte a čísla se stáhnou přes Fachmana a načtou sama. Endpoint `/api/most` funguje jen s proměnnou `AVQIX_LOCAL=1` a jen z localhostu, na Vercelu je vypnutý.
