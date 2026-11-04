@@ -1,0 +1,79 @@
+[
+ {
+  "campaign": {
+   "id": "100",
+   "name": "Brand · Vyhledávání",
+   "status": "ENABLED",
+   "advertisingChannelType": "SEARCH"
+  },
+  "metrics": {
+   "costMicros": "4200000000",
+   "clicks": "2100",
+   "impressions": "38000",
+   "conversions": 160,
+   "conversionsValue": 144000.0,
+   "searchBudgetLostImpressionShare": 0.22
+  }
+ },
+ {
+  "campaign": {
+   "id": "101",
+   "name": "Služby · Vyhledávání",
+   "status": "ENABLED",
+   "advertisingChannelType": "SEARCH"
+  },
+  "metrics": {
+   "costMicros": "18500000000",
+   "clicks": "1400",
+   "impressions": "52000",
+   "conversions": 48,
+   "conversionsValue": 33600.0,
+   "searchBudgetLostImpressionShare": 0.05
+  }
+ },
+ {
+  "campaign": {
+   "id": "102",
+   "name": "Produkty · PMax",
+   "status": "ENABLED",
+   "advertisingChannelType": "PERFORMANCE_MAX"
+  },
+  "metrics": {
+   "costMicros": "26000000000",
+   "clicks": "3100",
+   "impressions": "210000",
+   "conversions": 92,
+   "conversionsValue": 75440.0
+  }
+ },
+ {
+  "campaign": {
+   "id": "103",
+   "name": "Remarketing · Display",
+   "status": "ENABLED",
+   "advertisingChannelType": "DISPLAY"
+  },
+  "metrics": {
+   "costMicros": "5200000000",
+   "clicks": "900",
+   "impressions": "60000",
+   "conversions": 14,
+   "conversionsValue": 8960.0
+  }
+ },
+ {
+  "campaign": {
+   "id": "104",
+   "name": "Nové produkty · Shopping",
+   "status": "ENABLED",
+   "advertisingChannelType": "SHOPPING"
+  },
+  "metrics": {
+   "costMicros": "9800000000",
+   "clicks": "1100",
+   "impressions": "80000",
+   "conversions": 9,
+   "conversionsValue": 8100.0
+  }
+ }
+]
