@@ -10,6 +10,9 @@ import { Creatives } from './creatives';
 import { useWorkspace } from './workspace';
 import { Recommendations, RecoToggles } from './recommendations';
 import { clientsStore, slugify, useCustomClients } from '@/lib/clients-store';
+import { goalsStore } from '@/lib/goals-store';
+import { useEffect } from 'react';
+import type { PpcClientInfo } from '@/lib/ppc-md';
 import type { BusinessModel } from '@/lib/business-models';
 import { gscRecommendations } from '@/lib/gsc-store';
 import { gscReportRows } from '@/lib/search-console';
@@ -41,6 +44,9 @@ export function ProfilePage() {return <main className="page-content"><PageHeader
 
 export function ClientsPage() {
  const { client, period, setClient } = useWorkspace(); const navigate = useNavigate(); const custom = useCustomClients();
+ const [folderMsg, setFolderMsg] = useState(''); const [liveOk, setLiveOk] = useState(false);
+ useEffect(() => { void fetch('/api/klienti').then(r => setLiveOk(r.ok)).catch(() => setLiveOk(false)); }, []);
+ const loadFolders = async () => { try { const r = await fetch('/api/klienti'); const d = await r.json() as { clients: ({ slug: string; name: string } & PpcClientInfo)[] }; let added = 0, withGoals = 0; for (const c of d.clients) { if (custom.some(x => x.slug === c.slug)) continue; if (clientsStore.add(c.name, c.model ?? 'services', c.slug) === null) { added++; clientsStore.update(c.name, { ...(c.googleId ? { googleId: c.googleId } : {}), ...(c.metaId ? { metaId: c.metaId } : {}) }); if (c.goals) { goalsStore.save(c.name, c.goals); withGoals++; } } } setFolderMsg(added ? `Přidáno ${added} klientů ze složky AGENTURA/klienti${withGoals ? `, ${withGoals} s cíli z ppc.md` : ''}.` : 'Žádní noví klienti ve složce AGENTURA/klienti.'); } catch { setFolderMsg('Načtení se nepovedlo.'); } };
  const [name, setName] = useState(''); const [model, setModel] = useState<BusinessModel>('ecommerce'); const [slug, setSlug] = useState(''); const [error, setError] = useState('');
  const add = () => { const err = clientsStore.add(name, model, slug); setError(err ?? ''); if (!err) { setName(''); setSlug(''); setClient(demoClients.length + custom.length); navigate({ to: '/cile' }); } };
  return <main className="page-content"><PageHeader title="Klienti" description="Všichni klienti a jejich obchodní modely na jednom místě."/>
@@ -49,7 +55,7 @@ export function ClientsPage() {
     <label>Název klienta<input value={name} onChange={e => setName(e.target.value)} placeholder="např. Ordinace Dr. Nováková"/></label>
     <label>Typ podnikání<select value={model} onChange={e => setModel(e.target.value as BusinessModel)}>{(Object.keys(modelLabels) as BusinessModel[]).map(m => <option key={m} value={m}>{modelLabels[m]}</option>)}</select></label>
     <label>Krátké jméno složky (nepovinné)<input value={slug} onChange={e => setSlug(e.target.value)} placeholder={slugify(name) || 'ordinace-dr-novakova'}/><p className="goal-help">Stejné jako složka klienta v AGENTURA/klienti. Používá se v příkazu pro Fachmana.</p></label>
-   </div><div className="gsc-actions"><Button size="sm" onClick={add}><Plus/>Přidat klienta</Button></div>
+   </div><div className="gsc-actions"><Button size="sm" onClick={add}><Plus/>Přidat klienta</Button>{liveOk && <Button size="sm" variant="outline" onClick={() => void loadFolders()}>Načíst klienty ze složky AGENTURA</Button>}</div>{folderMsg && <p className="goal-help" role="status">{folderMsg}</p>}
    {error && <p className="goal-help" role="alert">{error}</p>}<p className="goal-help">Klienti se ukládají jen v tomto prohlížeči.</p></div></section>
   <div className="reports-grid">{demoClients.map((c, i) => { const kpis = getModelKpis(i, period).slice(0, 2); return <article className="report-card" key={c.name}><Users size={28}/><small>{modelLabels[c.model].toUpperCase()}</small><h2>{c.name}</h2>{kpis.map(k => <p key={k.label} className="tabular-nums">{k.label}: <strong>{k.value}</strong></p>)}<div><span>{i === client ? 'Vybraný klient' : 'Demo data'}</span><Button size="sm" onClick={() => { setClient(i); navigate({ to: '/' }); }}>Otevřít<ArrowUpRight/></Button></div></article>; })}
   {custom.map((c, j) => { const i = demoClients.length + j; return <article className="report-card" key={c.name}><Users size={28}/><small>{modelLabels[c.model].toUpperCase()}</small><h2>{c.name}</h2><p>Složka: {c.slug}</p><div><span>{i === client ? 'Vybraný klient' : 'Váš klient'}</span><span><Button size="sm" variant="ghost" aria-label={`Odebrat klienta ${c.name}`} onClick={() => { if (i === client) setClient(0); clientsStore.remove(c.name); }}><Trash2/></Button><Button size="sm" onClick={() => { setClient(i); navigate({ to: '/cile' }); }}>Otevřít<ArrowUpRight/></Button></span></div></article>; })}</div></main>;

@@ -9,6 +9,7 @@ import { ColumnReport } from './column-report';
 import { connectors, type Connector } from '@/lib/data-sources';
 import { checkColumns, parseCsv, type ColumnCheck } from '@/lib/csv-import';
 import { parseGscCsv } from '@/lib/search-console';
+import { emailStore, parseEmailCsv } from '@/lib/email-data';
 import { gscStore } from '@/lib/gsc-store';
 import { aiProviders, type AiProvider } from '@/lib/ai-summary';
 import { aiStore, useAiSettings } from '@/lib/ai-store';
@@ -40,6 +41,7 @@ function StatusPill() {
 }
 
 function ConnectorCard({ connector }: { connector: Connector }) {
+  const { client } = useWorkspace();
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState<Check | null>(null);
   const spec = connector.csv!.columns;
@@ -51,6 +53,13 @@ function ConnectorCard({ connector }: { connector: Connector }) {
       const check = parsed.check ?? checkColumns(table[0] ?? [], spec);
       if (parsed.ok) gscStore.set('current', parsed.dataset);
       setResult({ fileName, check, preview: table.slice(1, 6), rowCount: Math.max(0, table.length - 1), stored: parsed.ok, errors: parsed.ok ? parsed.warnings : parsed.errors });
+      return;
+    }
+    if (connector.id === 'email') {
+      const parsed = parseEmailCsv(text);
+      const table = parseCsv(text);
+      if (parsed.ok) emailStore.set(clients[client] ?? '', parsed.campaigns);
+      setResult({ fileName, check: checkColumns(table[0] ?? [], spec), preview: table.slice(1, 6), rowCount: Math.max(0, table.length - 1), stored: parsed.ok, errors: parsed.ok ? parsed.warnings : parsed.errors });
       return;
     }
     const table = parseCsv(text);
@@ -75,7 +84,7 @@ function ConnectorCard({ connector }: { connector: Connector }) {
         <ColumnReport spec={spec} check={result.check} />
         {result.errors.map(e => <p key={e} className="gsc-note">{e}</p>)}
         {result.preview.length > 0 && <div className="table-scroll"><table><tbody>{result.preview.map((r, i) => <tr key={i}>{r.slice(0, 6).map((cell, j) => <td key={j}>{cell}</td>)}</tr>)}</tbody></table></div>}
-        {result.stored ? <p className="gsc-note">Načteno do paměti. <Link to="/search-console" className="gsc-link">Otevřít analýzu Search Console</Link></p>
+        {result.stored ? <p className="gsc-note">Načteno do paměti{connector.id === 'email' ? ` pro klienta ${clients[client] ?? ''}` : ''}. {connector.id === 'email' ? <Link to="/cile" className="gsc-link">Otevřít Cíle a rady</Link> : <Link to="/search-console" className="gsc-link">Otevřít analýzu Search Console</Link>}</p>
           : <p className="gsc-note">{connector.csv!.feedsApp ? 'Data nebyla načtena, opravte soubor.' : 'Zatím jen kontrola sloupců a náhled. Data se neukládají a žádná část aplikace je nepoužívá.'}</p>}
       </>}
     </div>}

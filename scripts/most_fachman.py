@@ -5,7 +5,7 @@ Použití (ze složky avqix-intelligence-studio):
   python3 scripts/most_fachman.py <klient> --google 123-456-7890 [--meta act_123456] [--dny 30]
 
 Jen standardní knihovna Pythonu. Fachmana nijak nemění: spustí jeho skripty
-scripts/google_ads/fetch.py a scripts/meta/fetch.py (čtou data) a výstup uloží k nám.
+scripts/google_ads/fetch.py (report campaigns_daily) a scripts/meta/fetch.py (insights po dnech), obojí jen čtení a výstup uloží k nám.
 Tajné soubory (.env) nečte. Jede sériově, ať neblokujeme API.
 """
 import argparse, datetime, os, re, subprocess, sys
@@ -40,11 +40,11 @@ def main() -> None:
     dnes = datetime.date.today().isoformat()
     ulozeno = []
     if a.google:
-        text = spust([str(py), "scripts/google_ads/fetch.py", a.google, "campaigns", "--days", str(a.dny)])
+        text = spust([str(py), "scripts/google_ads/fetch.py", a.google, "campaigns_daily", "--days", str(a.dny)])
         f = OUT / f"{a.klient}-google-ads-{a.dny}d-{dnes}.json"
         f.write_text(text, encoding="utf-8"); ulozeno.append(f)
     if a.meta:
-        text = spust([str(py), "scripts/meta/fetch.py", "insights", a.meta, "--level", "campaign", "--days", str(a.dny)])
+        text = spust([str(py), "scripts/meta/fetch.py", "insights", a.meta, "--level", "campaign", "--days", str(a.dny), "--params", "time_increment=1"])
         f = OUT / f"{a.klient}-meta-ads-{a.dny}d-{dnes}.json"
         f.write_text(text, encoding="utf-8"); ulozeno.append(f)
     print("Hotovo. Uloženo:")

@@ -80,7 +80,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "AVQIX Intelligence Studio" },
-      { name: "description", content: "AVQIX Intelligence Studio — přehled marketingového výkonu" },
+      { name: "description", content: "AVQIX Intelligence Studio — cíle klienta, skutečnost proti cíli a konkrétní rady po kampaních" },
       { name: "author", content: "AVQIX" },
       { property: "og:title", content: "AVQIX Intelligence Studio" },
       { property: "og:description", content: "AVQIX Intelligence Studio — přehled marketingového výkonu" },

@@ -5,6 +5,7 @@
  */
 import { clientConfig, money, number, type Recommendation } from './analytics-data';
 import type { CampaignData, CampaignKind, Channel, ChannelCampaign } from './campaign-data';
+import { emailTotals, type EmailCampaign } from './email-data';
 import { formatMetric, metricInfo, type ClientGoals, type GoalMetric, type KpiGoal } from './goals';
 
 export type Verdict = 'met' | 'near' | 'below' | 'nodata' | 'otherperiod';
@@ -46,7 +47,9 @@ export type KpiProgress = {
   dataLabel: string;
 };
 
-export type GoalContext = { dataFor: (days: number) => CampaignData; organicClicks: number | null };
+export type GoalContext = { dataFor: (days: number) => CampaignData; organicClicks: number | null; emails?: EmailCampaign[] };
+const EMAIL_METRICS: GoalMetric[] = ['openRate', 'clickRate', 'unsubRate'];
+const emailMetric = (metric: GoalMetric, cs: EmailCampaign[]) => { const t = emailTotals(cs); return t ? (metric === 'openRate' ? t.openRate : metric === 'clickRate' ? t.clickRate : t.unsubRate) : null; };
 
 const inScope = (data: CampaignData, goal: KpiGoal) => data.campaigns.filter(c => goal.channel === 'all' || c.channel === goal.channel);
 
@@ -61,6 +64,10 @@ export function computeProgress(goals: ClientGoals, ctx: GoalContext): KpiProgre
       const percent = metricInfo[goal.metric].better === 'up' ? Math.min(100, Math.max(0, actual / goal.target * 100)) : Math.min(100, Math.max(0, ratio * 100));
       return { ...base, actual, ratio, verdict: verdictOf(ratio), percent: Math.round(percent), note };
     };
+    if (EMAIL_METRICS.includes(goal.metric)) {
+      const v = emailMetric(goal.metric, ctx.emails ?? []);
+      return finish(v, v === null ? 'Nahrajte export e-mailových kampaní na stránce Datové zdroje → E-mailing.' : 'Z nahraného exportu e-mailových kampaní.');
+    }
     if (goal.metric === 'organicClicks') {
       return finish(ctx.organicClicks, ctx.organicClicks === null ? 'Nahrajte export Dotazy ze Search Console na stránce Search Console.' : 'Součet kliknutí z nahraného exportu. Za jaké období je export, hlídejte si sami.');
     }
@@ -122,7 +129,15 @@ export function buildAdvice(progress: KpiProgress[], ctx: GoalContext & { client
     };
     const metric = goal.metric;
 
-    if (metric === 'organicClicks') {
+    if (EMAIL_METRICS.includes(metric)) {
+      if (bad) {
+        const rows = (ctx.emails ?? []).filter(c => c.sent >= 200).map(c => ({ c, v: emailMetric(metric, [c]) })).filter((x): x is { c: EmailCampaign; v: number } => x.v !== null);
+        const worst = rows.sort((a, b) => (metricInfo[metric].better === 'up' ? a.v - b.v : b.v - a.v)).slice(0, 3);
+        const tip = metric === 'openRate' ? 'Vyzkoušet jiný předmět (A/B test), čas odeslání a očistit seznam od neaktivních příjemců.' : metric === 'clickRate' ? 'Zkrátit text, dát jedno výrazné tlačítko nahoru a jasně říct, co se stane po kliknutí.' : 'Snížit frekvenci odesílání a nabídnout výběr, jaké e-maily příjemce chce.';
+        worst.forEach(({ c, v }, i) => add({ key: `email:${c.name}`, channel: 'E-mail', campaign: c.name, priority: i === 0 && p.ratio! < 0.7 ? 'Vysoká' : 'Střední', confidence: c.sent >= 2000 ? 'Vysoká' : c.sent >= 500 ? 'Střední' : 'Nízká', title: `U e-mailu „${c.name}“ zlepšit ${shortLabel(metric, '').toLowerCase()}`, insight: `U tohoto e-mailu: ${shortLabel(metric, '')} je ${formatMetric(metric, v)}, cíl je ${formatMetric(metric, goal.target)} (odesláno ${number(c.sent)}).`, action: tip, recipient: 'E-mailing specialista', audience: 'Interní', impact: 'Lepší výsledky e-mailů bez nákladů na reklamu' }));
+        if (worst.length === 0) add({ key: 'email-nodata', channel: 'E-mail', campaign: null, priority: 'Nízká', confidence: 'Nízká', title: 'E-mailový cíl je pod plánem, ale chybí dost dat', insight: 'Žádná kampaň nemá aspoň 200 odeslaných e-mailů.', action: 'Počkat na větší odeslání a pak data nahrát znovu.', recipient: 'E-mailing specialista', audience: 'Interní', impact: 'Rozhodnutí na základě dat' });
+      }
+    } else if (metric === 'organicClicks') {
       if (bad) add({ key: 'organic', channel: 'Organika', campaign: null, priority: 'Střední', confidence: 'Střední', title: 'Kliknutí z Googlu zdarma jsou pod cílem', insight: `Chybí ${number(goal.target - p.actual)} kliknutí do cíle.`, action: ctx.organicRecommendations > 0 ? `Ve Search Console čeká ${ctx.organicRecommendations} doporučení. Projděte je a předejte nejdůležitější.` : 'Nahrajte export Dotazy a Stránky ze Search Console, aplikace pak ukáže, které dotazy mají největší potenciál.', recipient: 'SEO specialista', audience: 'Interní', impact: 'Více návštěvníků bez nákladů na reklamu' });
     } else if (metric === 'roas' || metric === 'pno' || metric === 'cpa') {
       for (const c of [...scope].sort((a, b) => b.spend - a.spend)) {
@@ -154,7 +169,7 @@ export function buildAdvice(progress: KpiProgress[], ctx: GoalContext & { client
         const ranked = scope.filter(c => c.conversions >= 15 && eff(c) !== null).sort((a, b) => (metric === 'revenue' ? eff(b)! - eff(a)! : eff(a)! - eff(b)!)).slice(0, 2);
         ranked.forEach((c, i) => add({ key: `${c.id}:volume`, channel: c.channel, campaign: c.name, priority: i === 0 && p.ratio! < 0.7 ? 'Vysoká' : 'Střední', confidence: confidenceByConversions(c),
           title: `U kampaně „${c.name}“ přidat rozpočet`,
-          insight: `Do cíle chybí ${metric === 'revenue' ? money(gap) : `${number(gap)} (${vocab.conversions})`}. Tato kampaň je ${i === 0 ? 'nejefektivnější' : 'druhá nejefektivnější'} (${metric === 'revenue' ? `ROAS ${dec1(eff(c)!)}×` : `cena ${money(eff(c)!)} za ${vocab.conversion}`}), takže tam přidaná koruna pracuje nejlépe.`,
+          insight: `Do cíle chybí ${metric === 'revenue' ? money(gap) : `${number(gap)} (${vocab.conversions})`}. Tato kampaň je ${i === 0 ? 'nejefektivnější' : 'druhá nejefektivnější'} (${metric === 'revenue' ? `ROAS ${dec1(eff(c)!)}×` : `cena ${money(eff(c)!)} za jeden výsledek (${vocab.conversion})`}), takže tam přidaná koruna pracuje nejlépe.`,
           action: 'Zvýšit denní rozpočet o 20 % (nejvýš po krocích 10–20 %) a po týdnu zkontrolovat, že efektivita neklesla.', recipient: specialist(c), audience: 'Interní', impact: 'Přiblížení k objemovému cíli' }));
         if (ranked.length === 0) add({ key: 'volume-nodata', channel: scope[0]?.channel ?? 'Google Ads', campaign: null, priority: 'Nízká', confidence: 'Nízká', title: 'Objem je pod cílem, ale chybí dost dat na doporučení', insight: 'Žádná kampaň nemá aspoň 15 konverzí, takže nelze poznat, kde přidat rozpočet.', action: 'Počkat, až kampaně nasbírají víc dat, a zatím nic zásadního neměnit.', recipient: 'PPC specialista', audience: 'Interní', impact: 'Rozhodnutí na základě dat' });
       }

@@ -131,3 +131,56 @@ describe('own clients', () => {
     expect(clients).toHaveLength(4);
   });
 });
+
+import { emailTotals, parseEmailCsv } from '@/lib/email-data';
+import { parsePpcMd } from '@/lib/ppc-md';
+import { buildClientReportHtml } from '@/lib/client-report';
+
+describe('e-mailing', () => {
+  const csv = 'Kampaň;Odesláno;Otevření;Kliknutí;Odhlášení\nA;1000;300;30;5\nB;1000;100;10;20\n';
+  it('parses a Czech export and computes rates', () => {
+    const r = parseEmailCsv(csv);
+    if (!r.ok) throw new Error('should parse');
+    const t = emailTotals(r.campaigns)!;
+    expect(t.openRate).toBeCloseTo(20);
+    expect(t.clickRate).toBeCloseTo(2);
+    expect(t.unsubRate).toBeCloseTo(1.25);
+  });
+  it('rejects files without the required columns', () => { expect(parseEmailCsv('x;y\n1;2').ok).toBe(false); });
+  it('points a weak open rate at the worst e-mail', () => {
+    const r = parseEmailCsv(csv); if (!r.ok) throw new Error();
+    const ctx = { ...ctxFor([]), emails: r.campaigns };
+    const advice = buildAdvice(computeProgress(goals([kpi('openRate', 30, 'E-mail')]), ctx), { ...ctx, client: 0, organicRecommendations: 0 });
+    expect(advice[0]!.campaign).toBe('B');
+    expect(advice[0]!.recipient).toBe('E-mailing specialista');
+  });
+});
+
+describe('daily Fachman data', () => {
+  it('adds up rows of one campaign and builds a daily series', () => {
+    const rows = [1, 2].flatMap(d => [{ segments: { date: `2026-10-0${d}` }, campaign: { id: '1', name: 'A', status: 'ENABLED', advertisingChannelType: 'SEARCH' }, metrics: { costMicros: '1000000000', conversions: 2, conversionsValue: 5000, clicks: '10', impressions: '100' } }]);
+    const r = parseFachmanJson(JSON.stringify(rows), 'x-google-ads-30d-denne.json');
+    if (!r.ok) throw new Error();
+    expect(r.dataset.campaigns).toHaveLength(1);
+    expect(r.dataset.campaigns[0]).toMatchObject({ spend: 2000, conversions: 4, revenue: 10000 });
+    expect(r.dataset.daily).toHaveLength(2);
+  });
+});
+
+describe('ppc.md and client report', () => {
+  it('reads IDs, type and KPI lines', () => {
+    const t = '- **Typ podnikání:** e-shop\n- **Google Ads customer ID:** 123-456-7890 (pod MCC)\n- **Meta ad account ID:** act_123456\n- KPI: ROAS ≥ 5 × · 30 dní · vše\n';
+    const i = parsePpcMd(t);
+    expect(i).toMatchObject({ googleId: '123-456-7890', metaId: 'act_123456', model: 'ecommerce' });
+    expect(i.goals?.kpis).toHaveLength(1);
+    expect(parsePpcMd('nic')).toEqual({});
+  });
+  it('builds a static report without scripts and escapes text', () => {
+    const cs = [camp({ name: 'Slabá', revenue: 1500, spend: 5000 })];
+    const ctx = ctxFor(cs); const progress = computeProgress(goals([kpi('roas', 5)]), ctx);
+    const html = buildClientReportHtml({ clientName: 'A <b>B</b>', business: 'Cíl', marketing: '', progress, advice: buildAdvice(progress, { ...ctx, client: 0, organicRecommendations: 0 }), conversion: 'objednávka', dataLabel: 'Test' });
+    expect(html).not.toContain('<script');
+    expect(html).toContain('A &lt;b&gt;B&lt;/b&gt;');
+    expect(html).toContain('Pod cílem');
+  });
+});

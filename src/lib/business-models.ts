@@ -12,7 +12,7 @@ export type KpiCode =
   | 'inquiries' | 'qualified' | 'pipeline' | 'won' | 'cycle';
 
 /** Metrics a client can set a target for. Measurable per campaign or channel. */
-export type GoalMetric = 'roas' | 'pno' | 'cpa' | 'revenue' | 'conversions' | 'spend' | 'ctr' | 'cpc' | 'organicClicks';
+export type GoalMetric = 'roas' | 'pno' | 'cpa' | 'revenue' | 'conversions' | 'spend' | 'ctr' | 'cpc' | 'organicClicks' | 'openRate' | 'clickRate' | 'unsubRate';
 
 export type ModelConfig = {
   label: string;
@@ -31,28 +31,28 @@ export const modelConfigs: Record<BusinessModel, ModelConfig> = {
     vocab: { conversion: 'objednávka', conversions: 'objednávky', value: 'tržby', customer: 'zákazník', goal: 'tržby s cílovým PNO' },
     kpis: ['revenue', 'spend', 'roas', 'pno', 'mer', 'aov', 'returning'],
     hiddenSections: [],
-    goals: { metrics: ['roas', 'pno', 'revenue', 'spend', 'conversions', 'ctr', 'organicClicks'], businessExample: 'Tržby e-shopu 600 000 Kč měsíčně při zachování marže', marketingExample: 'Získat nové zákazníky z Meta a Google a udržet PNO pod 20 %' },
+    goals: { metrics: ['roas', 'pno', 'revenue', 'spend', 'conversions', 'ctr', 'organicClicks', 'openRate', 'clickRate'], businessExample: 'Tržby e-shopu 600 000 Kč měsíčně při zachování marže', marketingExample: 'Získat nové zákazníky z Meta a Google a udržet PNO pod 20 %' },
   },
   services: {
     label: 'Služby · lead generation',
     vocab: { conversion: 'objednaná konzultace', conversions: 'objednané konzultace', value: 'tržby ze služeb', customer: 'klient', goal: 'objednané termíny' },
     kpis: ['leads', 'booked', 'bookingRate', 'costPerBooking', 'responseTime', 'capacity'],
     hiddenSections: [],
-    goals: { metrics: ['cpa', 'conversions', 'spend', 'ctr', 'cpc', 'organicClicks'], businessExample: 'Zaplnit volné termíny na příští měsíc', marketingExample: 'Víc objednaných konzultací za rozumnou cenu' },
+    goals: { metrics: ['cpa', 'conversions', 'spend', 'ctr', 'cpc', 'organicClicks', 'openRate', 'clickRate'], businessExample: 'Zaplnit volné termíny na příští měsíc', marketingExample: 'Víc objednaných konzultací za rozumnou cenu' },
   },
   hybrid: {
     label: 'Hybrid · služby + e-shop',
     vocab: { conversion: 'objednávka nebo konzultace', conversions: 'objednávky a konzultace', value: 'tržby služeb a e-shopu', customer: 'klient', goal: 'objednané termíny a tržby e-shopu' },
     kpis: ['leads', 'booked', 'costPerBooking', 'serviceRevenue', 'shopRevenue', 'shopRoas', 'capacity', 'returning'],
     hiddenSections: [],
-    goals: { metrics: ['cpa', 'roas', 'conversions', 'revenue', 'spend', 'ctr', 'organicClicks'], businessExample: 'Zaplnit kapacitu kliniky a zvýšit tržby e-shopu', marketingExample: 'Objednané konzultace a prodej kosmetiky z reklam' },
+    goals: { metrics: ['cpa', 'roas', 'conversions', 'revenue', 'spend', 'ctr', 'organicClicks', 'openRate', 'clickRate'], businessExample: 'Zaplnit kapacitu kliniky a zvýšit tržby e-shopu', marketingExample: 'Objednané konzultace a prodej kosmetiky z reklam' },
   },
   b2b: {
     label: 'B2B',
     vocab: { conversion: 'kvalifikovaná příležitost', conversions: 'kvalifikované příležitosti', value: 'uzavřené zakázky', customer: 'firma', goal: 'pipeline a uzavřené zakázky' },
     kpis: ['inquiries', 'qualified', 'pipeline', 'won', 'cycle'],
     hiddenSections: [],
-    goals: { metrics: ['cpa', 'conversions', 'spend', 'ctr', 'cpc', 'organicClicks'], businessExample: 'Uzavřít 3 nové zakázky za čtvrtletí', marketingExample: 'Kvalifikované poptávky od firem v cílovém oboru' },
+    goals: { metrics: ['cpa', 'conversions', 'spend', 'ctr', 'cpc', 'organicClicks', 'openRate', 'clickRate'], businessExample: 'Uzavřít 3 nové zakázky za čtvrtletí', marketingExample: 'Kvalifikované poptávky od firem v cílovém oboru' },
   },
 };
 

@@ -4,7 +4,7 @@
  *  - Meta Ads:   output of `scripts/meta/fetch.py insights <act_id> --level campaign --days N`
  * Everything happens in the browser. Nothing is uploaded.
  */
-import { kindOf, type BridgeDataset, type BridgeSource, type ChannelCampaign } from './campaign-data';
+import { kindOf, type BridgeDataset, type BridgeSource, type ChannelCampaign, type DailyPoint } from './campaign-data';
 
 export type BridgeParse = { ok: true; dataset: BridgeDataset } | { ok: false; errors: string[] };
 
@@ -17,23 +17,36 @@ const get = (o: unknown, ...path: string[]): unknown => path.reduce<unknown>((ac
 /** "-30d-" in the file name (written by the bridge script) tells which period the file covers. */
 export const daysFromFileName = (fileName: string) => { const m = /-(\d{1,3})d(?:-|\.)/.exec(fileName); return m ? Number(m[1]) : null; };
 
-function googleCampaigns(rows: Obj[]): { campaigns: ChannelCampaign[]; skipped: number } {
+type Parsed = { campaigns: ChannelCampaign[]; skipped: number; daily: DailyPoint[] };
+const addDaily = (map: Map<string, DailyPoint>, date: unknown, spend: number, revenue: number, conversions: number) => {
+  if (typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+  const d = map.get(date) ?? { date, spend: 0, revenue: 0, conversions: 0 };
+  map.set(date, { date, spend: d.spend + spend, revenue: d.revenue + revenue, conversions: d.conversions + conversions });
+};
+const sortedDaily = (map: Map<string, DailyPoint>) => [...map.values()].sort((x, y) => x.date.localeCompare(y.date));
+
+/** Works for both the totals report and the daily report: rows of the same campaign are added up. */
+function googleCampaigns(rows: Obj[]): Parsed {
   let skipped = 0;
-  const campaigns: ChannelCampaign[] = [];
+  const byId = new Map<string, ChannelCampaign & { lostSum: number; lostN: number }>();
+  const daily = new Map<string, DailyPoint>();
   for (const r of rows) {
     const name = get(r, 'campaign', 'name');
     if (typeof name !== 'string') { skipped++; continue; }
+    const id = String(get(r, 'campaign', 'id') ?? name);
+    const spend = num(get(r, 'metrics', 'costMicros')) / 1e6, revenue = num(get(r, 'metrics', 'conversionsValue')), conv = num(get(r, 'metrics', 'conversions'));
     const lost = get(r, 'metrics', 'searchBudgetLostImpressionShare');
-    campaigns.push({
-      id: String(get(r, 'campaign', 'id') ?? name), name, channel: 'Google Ads',
-      kind: kindOf(name, String(get(r, 'campaign', 'advertisingChannelType') ?? '')),
-      active: get(r, 'campaign', 'status') === 'ENABLED',
-      spend: num(get(r, 'metrics', 'costMicros')) / 1e6, revenue: num(get(r, 'metrics', 'conversionsValue')),
-      conversions: num(get(r, 'metrics', 'conversions')), clicks: num(get(r, 'metrics', 'clicks')), impressions: num(get(r, 'metrics', 'impressions')),
-      ...(lost !== undefined ? { lostBudgetShare: Math.min(1, Math.max(0, num(lost))) } : {}),
+    const prev = byId.get(id);
+    byId.set(id, {
+      id, name, channel: 'Google Ads', kind: kindOf(name, String(get(r, 'campaign', 'advertisingChannelType') ?? '')), active: get(r, 'campaign', 'status') === 'ENABLED',
+      spend: (prev?.spend ?? 0) + spend, revenue: (prev?.revenue ?? 0) + revenue, conversions: (prev?.conversions ?? 0) + conv,
+      clicks: (prev?.clicks ?? 0) + num(get(r, 'metrics', 'clicks')), impressions: (prev?.impressions ?? 0) + num(get(r, 'metrics', 'impressions')),
+      lostSum: (prev?.lostSum ?? 0) + (lost !== undefined ? num(lost) : 0), lostN: (prev?.lostN ?? 0) + (lost !== undefined ? 1 : 0),
     });
+    addDaily(daily, get(r, 'segments', 'date'), spend, revenue, conv);
   }
-  return { campaigns, skipped };
+  const campaigns = [...byId.values()].map(({ lostSum, lostN, ...c }) => (lostN > 0 ? { ...c, lostBudgetShare: Math.min(1, Math.max(0, lostSum / lostN)) } : c));
+  return { campaigns, skipped, daily: sortedDaily(daily) };
 }
 
 const actionValue = (list: unknown, types: string[]) => {
@@ -47,9 +60,10 @@ const actionValue = (list: unknown, types: string[]) => {
 const purchaseTypes = ['purchase', 'omni_purchase', 'offsite_conversion.fb_pixel_purchase'];
 const leadTypes = ['lead', 'offsite_conversion.fb_pixel_lead', 'onsite_conversion.lead_grouped'];
 
-function metaCampaigns(rows: Obj[]): { campaigns: ChannelCampaign[]; skipped: number } {
+function metaCampaigns(rows: Obj[]): Parsed {
   let skipped = 0;
   const byName = new Map<string, ChannelCampaign>();
+  const daily = new Map<string, DailyPoint>();
   for (const r of rows) {
     const name = r['campaign_name'];
     if (typeof name !== 'string') { skipped++; continue; }
@@ -64,8 +78,9 @@ function metaCampaigns(rows: Obj[]): { campaigns: ChannelCampaign[]; skipped: nu
       spend: (prev?.spend ?? 0) + spend, revenue: (prev?.revenue ?? 0) + value, conversions: (prev?.conversions ?? 0) + conversions,
       clicks: (prev?.clicks ?? 0) + num(r['clicks']), impressions: (prev?.impressions ?? 0) + num(r['impressions']),
     });
+    addDaily(daily, r['date_start'], spend, value, conversions);
   }
-  return { campaigns: [...byName.values()], skipped };
+  return { campaigns: [...byName.values()], skipped, daily: sortedDaily(daily) };
 }
 
 export function parseFachmanJson(text: string, fileName: string): BridgeParse {
@@ -78,7 +93,7 @@ export function parseFachmanJson(text: string, fileName: string): BridgeParse {
   const sample = objects[0]!;
   const source: BridgeSource | null = isObj(sample['campaign']) ? 'google_ads' : typeof sample['campaign_name'] === 'string' ? 'meta_ads' : null;
   if (!source) return { ok: false, errors: ['Nepoznávám formát. Podporuji kampaně z Google Ads (report „campaigns“) a Meta Ads (insights na úrovni kampaní).'] };
-  const { campaigns, skipped } = source === 'google_ads' ? googleCampaigns(objects) : metaCampaigns(objects);
+  const { campaigns, skipped, daily } = source === 'google_ads' ? googleCampaigns(objects) : metaCampaigns(objects);
   if (campaigns.length === 0) return { ok: false, errors: ['Žádný řádek se nepodařilo přečíst.'] };
   const days = daysFromFileName(fileName);
   const notes = [
@@ -87,5 +102,5 @@ export function parseFachmanJson(text: string, fileName: string): BridgeParse {
     ...(days === null ? ['V názvu souboru chybí délka období (např. „-30d-“). Cíle za objem (tržby, počet konverzí, rozpočet) se proto nevyhodnotí.'] : []),
     ...(skipped ? [`${skipped} řádků bylo přeskočeno.`] : []),
   ];
-  return { ok: true, dataset: { source, fileName, days, campaigns, notes } };
+  return { ok: true, dataset: { source, fileName, days, campaigns, notes, ...(daily.length > 1 ? { daily } : {}) } };
 }
