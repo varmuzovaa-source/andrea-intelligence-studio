@@ -1,0 +1,58 @@
+<!doctype html><html lang="cs"><head><meta charset="utf-8"><title>AVQIX · Marketing Intelligence</title>
+<style>
+@page{size:A4;margin:18mm 16mm}
+body{font-family:-apple-system,"Helvetica Neue",Arial,sans-serif;color:#1c1c1c;font-size:10.5pt;line-height:1.5}
+h1{font-size:28pt;margin:0 0 2mm}h1 span{color:#8ac926}
+.sub{color:#666;margin-bottom:8mm}h2{font-size:14pt;margin:9mm 0 3mm;padding-bottom:2mm;border-bottom:2px solid #b6f23a}
+h3{font-size:11pt;margin:5mm 0 1mm}p{margin:0 0 3mm}ul{margin:0 0 3mm;padding-left:5mm}li{margin-bottom:1.2mm}
+table{width:100%;border-collapse:collapse;font-size:9.5pt;margin-top:2mm}th,td{text-align:left;padding:2.2mm 2.5mm;border-bottom:1px solid #ddd;vertical-align:top}
+th{background:#f3f3ef;font-weight:600}.tag{display:inline-block;padding:.5mm 2mm;border-radius:2mm;font-size:8.5pt;background:#eee}
+.ok{background:#e4f7b8}.no{background:#f1f1f1}.box{background:#f6f6f1;border-left:3px solid #b6f23a;padding:3mm 4mm;margin:3mm 0}
+code{background:#eee;padding:.4mm 1.5mm;border-radius:1mm;font-size:9.5pt}pre{background:#1c1c1c;color:#eaffc2;padding:3mm 4mm;border-radius:2mm;font-size:9pt;white-space:pre-wrap;word-break:break-all}
+img{width:100%;border:1px solid #ddd;border-radius:2mm;margin-top:3mm}.break{page-break-before:always}
+</style></head><body>
+<h1>AVQIX<span>.</span></h1><div class="sub">Marketing Intelligence · přehled aplikace · stav k 4. 11. 2026</div>
+
+<h2>Co aplikace dělá</h2>
+<p>AVQIX je přehledový nástroj pro marketingové řízení. Na jednom místě ukazuje, jak si vedou reklamy, web, organika a e-maily u jednotlivých klientů, a převádí čísla do srozumitelných doporučení: co zlepšit, komu to předat a jaký může být přínos.</p>
+<div class="box"><strong>Důležité o aktuálním stavu:</strong> je to funkční prototyp. Přehledy běží na vymyšlených demo datech a žádný externí účet zatím není připojený. Jedinou skutečnou cestou pro vlastní data je dnes import CSV ze Search Console.</div>
+<img src="screenshot-prehled.png" alt="Přehled výkonu">
+
+<h2>Pro koho je</h2>
+<ul>
+<li><strong>Marketingový manažer nebo performance marketér</strong>, který vede více klientů a potřebuje rychlý souhrn bez otevírání pěti nástrojů.</li>
+<li><strong>Malá agentura nebo freelancer</strong>, který klientům předává srozumitelné reporty a konkrétní další kroky.</li>
+<li><strong>Různé typy klientů:</strong> e-shop, služby (poptávky a rezervace), hybrid a B2B. Každý model má vlastní sadu čísel, slovník a doporučení.</li>
+</ul>
+
+<h2>Funkce</h2>
+<table><tr><th>Oblast</th><th>Co umí</th><th>Stav</th></tr>
+<tr><td>Přehled</td><td>Tržby, náklady, ROAS, PNO, MER, průměrná objednávka a vracející se zákazníci, vždy proti předchozímu období.</td><td><span class="tag no">demo data</span></td></tr>
+<tr><td>Klienti a obchodní modely</td><td>Čtyři ukázkoví klienti. Wording, KPI i doporučení se mění podle modelu.</td><td><span class="tag no">demo data</span></td></tr>
+<tr><td>Kampaně, web, organika</td><td>Tabulky s hledáním, řazením, filtry, výběrem sloupců a exportem CSV, grafy a náhledy kreativ.</td><td><span class="tag no">demo data</span></td></tr>
+<tr><td>Reporty</td><td>Report pro firmu (všechna doporučení, priority, komu předat) a report pro klienta. Export CSV.</td><td><span class="tag no">demo data</span></td></tr>
+<tr><td><strong>Search Console</strong></td><td>Import CSV v češtině i angličtině. Tabulky dotazů a stránek. <strong>Příležitosti:</strong> hodně zobrazení s nízkým CTR, pozice 8 až 20 a poklesy proti předchozímu období. Pravidlová doporučení s prioritou, jistotou a příklady.</td><td><span class="tag ok">pracuje s vašimi CSV</span></td></tr>
+<tr><td><strong>Datové zdroje</strong></td><td>Karty konektorů jako zásuvné moduly. U každého import CSV s kontrolou sloupců (co se našlo, co chybí).</td><td><span class="tag ok">kontrola sloupců</span></td></tr>
+<tr><td><strong>AI (Claude, GPT)</strong></td><td>Volitelné a vypnuté. Po zapnutí ukáže náhled souhrnných čísel, která by se poslala (žádné dotazy, adresy ani jména klientů).</td><td><span class="tag no">jen náhled, nic se neodesílá</span></td></tr></table>
+
+<h2 class="break">Napojení na zdroje dat</h2>
+<p>Všechny konektory jsou dnes <strong>Nepřipojeno</strong>. Tabulka ukazuje, co funguje už teď a co je potřeba pro skutečné napojení.</p>
+<table><tr><th>Zdroj</th><th>Co funguje dnes</th><th>Pro skutečné napojení bude potřeba</th></tr>
+<tr><td>Google Search Console</td><td>Import CSV, analýza příležitostí a doporučení</td><td>Přihlášení Google účtem s přístupem k webu</td></tr>
+<tr><td>Meta Ads</td><td>Kontrola sloupců a náhled CSV (data se zatím nepoužívají)</td><td>Přístup k reklamnímu účtu (Meta Marketing API)</td></tr>
+<tr><td>Google Ads</td><td>Kontrola sloupců a náhled CSV</td><td>Přístup k účtu a developer token</td></tr>
+<tr><td>Google Analytics 4</td><td>Kontrola sloupců a náhled CSV</td><td>Přístup k vlastnosti GA4</td></tr>
+<tr><td>YouTube</td><td>Kontrola sloupců a náhled CSV</td><td>Přístup ke kanálu (YouTube Analytics API)</td></tr>
+<tr><td>E-mailing</td><td>Kontrola sloupců a náhled CSV</td><td>API klíč použitého nástroje</td></tr>
+<tr><td>AI (Claude, GPT)</td><td>Vypínač a náhled dat k odeslání</td><td>Vlastní API klíč, uložený mimo prohlížeč</td></tr></table>
+<h3>Zásady soukromí</h3>
+<ul><li>CSV soubory se čtou jen ve vašem prohlížeči a nikam se neodesílají. Data jsou v paměti a po obnovení stránky zmizí.</li>
+<li>AI je ve výchozím stavu vypnutá a i po zapnutí by dostala jen souhrnná čísla.</li>
+<li>Veřejné demo na Vercelu obsahuje jen vymyšlená data. Před nasazením skutečných dat se produkční adresa zamkne.</li></ul>
+
+<h2>Jak to spustit (jeden příkaz)</h2>
+<p>Potřebujete jen nainstalovaný <a href="https://nodejs.org">Node.js</a>. Vše ostatní se stáhne samo.</p>
+<pre>gh repo clone varmuzovaa-source/andrea-intelligence-studio &amp;&amp; cd andrea-intelligence-studio &amp;&amp; ./start.sh</pre>
+<p>Kód už máte stažený? Stačí <code>./start.sh</code>. Aplikace se otevře na <code>http://localhost:5173</code>. Na stránce Search Console klikněte na „Vyzkoušet na vymyšlených datech“.</p>
+<p>Živé demo: <code>andrea-intelligence-studio.vercel.app</code> · Kód: <code>github.com/varmuzovaa-source/andrea-intelligence-studio</code> (soukromé)</p>
+</body></html>

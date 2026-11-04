@@ -7,6 +7,23 @@
 
 AVQIX je přehledový nástroj pro marketingové řízení: na jednom místě ukazuje, jak si vedou reklamy, web, organika a e-maily u jednotlivých klientů, a převádí čísla do srozumitelných doporučení. Vzniká jako osobní pracovní prototyp (Andrea Varmužová, performance marketing) a je postavený tak, aby šel postupně napojit na skutečné zdroje dat bez přepisování aplikace.
 
+## Rychlý start
+
+Jeden příkaz, vše ostatní se stáhne samo (potřebujete jen [Node.js](https://nodejs.org)):
+
+```sh
+gh repo clone varmuzovaa-source/andrea-intelligence-studio && cd andrea-intelligence-studio && ./start.sh
+```
+
+Už máte kód stažený? Stačí `./start.sh`. Otevře se aplikace a můžete rovnou kliknout na „Vyzkoušet na vymyšlených datech“ na stránce Search Console.
+
+## Nové: Search Console a Datové zdroje
+
+- **Search Console** (`/search-console`): nahrajete CSV export (česky i anglicky), aplikace rozpozná dotazy a stránky a ukáže **příležitosti**: hodně zobrazení s nízkým CTR, pozice 8 až 20 a poklesy proti předchozímu období. K tomu pravidlová doporučení s prioritou a jistotou.
+- **Datové zdroje** (`/datove-zdroje`): karty konektorů (Search Console, Meta Ads, Google Ads, GA4, YouTube, e-mailing, AI) jako zásuvné moduly. Všechny jsou zatím Nepřipojeno. U každého jde nahrát CSV a aplikace ukáže, které sloupce se našly a které chybí.
+- **AI (Claude, GPT)**: vypnutá ve výchozím stavu. Po zapnutí jen ukáže náhled souhrnných čísel, která by se poslala. V prototypu se nic neodesílá.
+- **Soukromí:** soubory se čtou jen v prohlížeči, data zůstanou v paměti a po obnovení stránky zmizí.
+
 ## Co už funguje (demo)
 
 - **Čtyři demo klienti, čtyři obchodní modely:** e-commerce, služby (lead generation), hybrid a B2B. Každý model má vlastní sadu KPI, slovník a doporučení, takže stejná aplikace dává smysl pro e-shop i pro klinku.
@@ -22,11 +39,10 @@ AVQIX je přehledový nástroj pro marketingové řízení: na jednom místě uk
 
 ## Kam to směřuje
 
-1. **Datové zdroje** jako zásuvné moduly: Google Search Console, Meta Ads, Google Ads, GA4, YouTube, e-mailing.
-2. **Import CSV** z těchto systémů s kontrolou sloupců, aby se nic tiše nepřečetlo špatně.
-3. **Doporučení nad skutečnými daty** (např. dotazy s vysokým zobrazením a nízkým CTR ze Search Console).
-4. **Volitelná AI vrstva** (Claude, GPT) s vlastním klíčem, vypnutá ve výchozím stavu. Posílala by se jen souhrnná čísla, ne surové řádky.
-5. **Soukromí na prvním místě:** reálná data zůstávají lokálně a produkční adresa se zamyká ochranou přístupu.
+1. **Skutečné připojení účtů** (Search Console, Meta Ads, Google Ads, GA4, YouTube, e-mailing) místo ručního CSV. Zatím není.
+2. **Import CSV i u ostatních zdrojů** tak, aby data skutečně vstupovala do přehledů (dnes jen kontrola sloupců).
+3. **Zapojení AI** (Claude, GPT) s vlastním klíčem, stále vypnuté ve výchozím stavu a jen se souhrnnými čísly.
+4. **Soukromí na prvním místě:** reálná data zůstávají lokálně a produkční adresa se zamyká ochranou přístupu.
 
 ## Technologie
 
@@ -35,8 +51,8 @@ TanStack Start (React, TypeScript), Tailwind CSS, Recharts, Vitest. Hostováno n
 ## Spuštění lokálně
 
 ```sh
-npm install
-npm run dev      # vývojový server
+./start.sh       # nainstaluje a spustí
+npm run dev      # jen vývojový server
 npm test         # testy
 npm run build    # produkční build
 ```
