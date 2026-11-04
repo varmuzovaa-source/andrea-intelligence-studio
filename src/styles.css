@@ -34,3 +34,53 @@ button { box-shadow:none!important; } a { text-decoration:none; } select { curso
 
 .metrics-extra {display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;margin:12px 0 0;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;}.metrics-extra>div {background:var(--card);padding:12px 16px;display:flex;flex-direction:column;gap:3px;}.metrics-extra dt {font-size:10px;color:var(--muted-foreground);}.metrics-extra dd {margin:0;font-size:17px;font-weight:700;}.metrics-extra small {font-size:9px;color:var(--muted-foreground);}
 @media(max-width:767px) { .metrics-extra {grid-template-columns:1fr 1fr;}.metrics-extra>div {padding:10px 12px;}.metrics-extra dd {font-size:15px;} }
+
+/* ---- Search Console, Datové zdroje, AI (semantic tokens only) ---- */
+.gsc-actions {display:flex;gap:8px;flex-wrap:wrap;}
+.gsc-import {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:18px;}
+.gsc-slot {background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;}
+.gsc-slot strong {font-size:13px;}
+.gsc-slot p,.gsc-slot small,.gsc-note {font-size:10px;color:var(--muted-foreground);}
+.gsc-note {margin:10px 0;line-height:1.55;}
+.gsc-link {text-decoration:underline;text-underline-offset:3px;color:var(--foreground);}
+.import-log {margin-top:16px;display:grid;gap:10px;}
+.import-entry {border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--card);padding:14px 16px;font-size:10px;}
+.import-entry strong {font-size:11px;margin-right:10px;}
+.import-entry small {color:var(--muted-foreground);}
+.import-entry p {margin-top:6px;color:var(--muted-foreground);}
+.import-entry.error {border-color:var(--destructive);}
+.import-entry.ok strong {color:var(--positive);}
+.import-entry.error strong {color:var(--destructive);}
+.column-report {list-style:none;margin:10px 0;padding:0;display:grid;gap:6px;font-size:10px;}
+.column-report li {display:flex;align-items:center;gap:8px;}
+.column-report small {margin-left:auto;color:var(--muted-foreground);}
+.column-found svg {color:var(--positive);}
+.column-missing svg,.column-missing span {color:var(--destructive);}
+.column-optional {color:var(--muted-foreground);}
+.gsc-up {color:var(--positive);font-size:10px;}
+.gsc-down {color:var(--destructive);font-size:10px;}
+.gsc-threshold {font-size:10px;color:var(--muted-foreground);display:flex;gap:8px;align-items:center;}
+.gsc-threshold input,.gsc-search,.ai-provider select {height:32px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--card);padding:0 10px;font-size:11px;color:var(--foreground);}
+.gsc-threshold input {width:80px;}
+.gsc-search {width:100%;max-width:320px;}
+.gsc-key {max-width:340px;overflow:hidden;text-overflow:ellipsis;}
+.gsc-examples {display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;}
+.gsc-examples code {font-size:10px;background:var(--secondary);border-radius:var(--radius-sm);padding:2px 6px;}
+.gsc-more {margin-top:10px;}
+.ai-payload {background:var(--card);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;font-size:10px;overflow-x:auto;margin:10px 0;}
+.connector-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:18px;}
+.connector-card {background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0;}
+.connector-head {display:flex;align-items:center;gap:14px;}
+.connector-head strong {font-size:13px;}
+.connector-head p {font-size:10px;color:var(--muted-foreground);margin-top:4px;}
+.connector-head .integration-state {margin:0 0 0 auto;}
+.connector-note {font-size:10px;color:var(--muted-foreground);display:flex;gap:8px;align-items:center;}
+.connector-actions {display:flex;gap:8px;flex-wrap:wrap;}
+.connector-actions .rotated {transform:rotate(180deg);}
+.connector-csv {border-top:1px solid var(--border);padding-top:14px;font-size:10px;}
+.connector-csv>p {color:var(--muted-foreground);margin-bottom:10px;}
+.import-status {margin:12px 0 4px;}
+.import-status.error {color:var(--destructive);}
+.ai-toggle {display:flex;gap:10px;align-items:center;font-size:11px;}
+.ai-provider {display:flex;flex-direction:column;gap:6px;font-size:10px;color:var(--muted-foreground);max-width:260px;}
+@media(max-width:767px) { .gsc-import,.connector-grid {grid-template-columns:1fr;} .connector-head {flex-wrap:wrap;} .connector-head .integration-state {margin:0 0 0 62px;} }

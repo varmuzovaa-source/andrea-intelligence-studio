@@ -10,17 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DatoveZdrojeRouteImport } from './routes/datove-zdroje'
 import { Route as KampaneRouteImport } from './routes/kampane'
 import { Route as KlientiRouteImport } from './routes/klienti'
 import { Route as NastaveniRouteImport } from './routes/nastaveni'
 import { Route as OrganikaRouteImport } from './routes/organika'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as ReportyRouteImport } from './routes/reporty'
+import { Route as SearchConsoleRouteImport } from './routes/search-console'
 import { Route as WebRouteImport } from './routes/web'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DatoveZdrojeRoute = DatoveZdrojeRouteImport.update({
+  id: '/datove-zdroje',
+  path: '/datove-zdroje',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KampaneRoute = KampaneRouteImport.update({
@@ -53,6 +60,11 @@ const ReportyRoute = ReportyRouteImport.update({
   path: '/reporty',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SearchConsoleRoute = SearchConsoleRouteImport.update({
+  id: '/search-console',
+  path: '/search-console',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WebRoute = WebRouteImport.update({
   id: '/web',
   path: '/web',
@@ -61,76 +73,90 @@ const WebRoute = WebRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/datove-zdroje': typeof DatoveZdrojeRoute
   '/kampane': typeof KampaneRoute
   '/klienti': typeof KlientiRoute
   '/nastaveni': typeof NastaveniRoute
   '/organika': typeof OrganikaRoute
   '/profil': typeof ProfilRoute
   '/reporty': typeof ReportyRoute
+  '/search-console': typeof SearchConsoleRoute
   '/web': typeof WebRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/datove-zdroje': typeof DatoveZdrojeRoute
   '/kampane': typeof KampaneRoute
   '/klienti': typeof KlientiRoute
   '/nastaveni': typeof NastaveniRoute
   '/organika': typeof OrganikaRoute
   '/profil': typeof ProfilRoute
   '/reporty': typeof ReportyRoute
+  '/search-console': typeof SearchConsoleRoute
   '/web': typeof WebRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/datove-zdroje': typeof DatoveZdrojeRoute
   '/kampane': typeof KampaneRoute
   '/klienti': typeof KlientiRoute
   '/nastaveni': typeof NastaveniRoute
   '/organika': typeof OrganikaRoute
   '/profil': typeof ProfilRoute
   '/reporty': typeof ReportyRoute
+  '/search-console': typeof SearchConsoleRoute
   '/web': typeof WebRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/datove-zdroje'
     | '/kampane'
     | '/klienti'
     | '/nastaveni'
     | '/organika'
     | '/profil'
     | '/reporty'
+    | '/search-console'
     | '/web'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/datove-zdroje'
     | '/kampane'
     | '/klienti'
     | '/nastaveni'
     | '/organika'
     | '/profil'
     | '/reporty'
+    | '/search-console'
     | '/web'
   id:
     | '__root__'
     | '/'
+    | '/datove-zdroje'
     | '/kampane'
     | '/klienti'
     | '/nastaveni'
     | '/organika'
     | '/profil'
     | '/reporty'
+    | '/search-console'
     | '/web'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DatoveZdrojeRoute: typeof DatoveZdrojeRoute
   KampaneRoute: typeof KampaneRoute
   KlientiRoute: typeof KlientiRoute
   NastaveniRoute: typeof NastaveniRoute
   OrganikaRoute: typeof OrganikaRoute
   ProfilRoute: typeof ProfilRoute
   ReportyRoute: typeof ReportyRoute
+  SearchConsoleRoute: typeof SearchConsoleRoute
   WebRoute: typeof WebRoute
 }
 
@@ -141,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/datove-zdroje': {
+      id: '/datove-zdroje'
+      path: '/datove-zdroje'
+      fullPath: '/datove-zdroje'
+      preLoaderRoute: typeof DatoveZdrojeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kampane': {
@@ -185,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/search-console': {
+      id: '/search-console'
+      path: '/search-console'
+      fullPath: '/search-console'
+      preLoaderRoute: typeof SearchConsoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/web': {
       id: '/web'
       path: '/web'
@@ -197,12 +237,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DatoveZdrojeRoute: DatoveZdrojeRoute,
   KampaneRoute: KampaneRoute,
   KlientiRoute: KlientiRoute,
   NastaveniRoute: NastaveniRoute,
   OrganikaRoute: OrganikaRoute,
   ProfilRoute: ProfilRoute,
   ReportyRoute: ReportyRoute,
+  SearchConsoleRoute: SearchConsoleRoute,
   WebRoute: WebRoute,
 }
 export const routeTree = rootRouteImport
