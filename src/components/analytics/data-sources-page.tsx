@@ -99,7 +99,7 @@ function FachmanCard() {
   const bridge = useBridge();
   const [target, setTarget] = useState<number | null>(null);
   const [msgs, setMsgs] = useState<{ ok: boolean; text: string }[]>([]);
-  const name = clients[target ?? client] ?? clients[0];
+  const name = clients[target ?? client] ?? clients[0] ?? "";
   const loaded = bridge[name] ?? [];
   const handle = (text: string, fileName: string) => {
     const r = parseFachmanJson(text, fileName);

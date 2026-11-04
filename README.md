@@ -78,3 +78,5 @@ Původně vytvořeno v [Lovable](https://lovable.dev), dál vyvíjeno v repozit�
 3. V AVQIX: **Datové zdroje → Fachman → Vybrat soubory z data-most**. Data žijí jen v paměti prohlížeče a po obnovení stránky se smažou.
 
 Fachmana skript nijak nemění a nic nikam neposílá. Zatím se čtou kampaně z Google Ads a Meta Ads; e-mailing (ActiveCampaign aj.) zatím data nemá.
+
+**Vlastní klient:** na stránce **Klienti → Přidat klienta** zadáte název a typ podnikání. Klient začíná prázdný (žádná vymyšlená čísla), vidí jen Cíle a rady, Úkoly týmu, Search Console a Datové zdroje. Ukládá se jen v tomto prohlížeči. Na stránce Cíle a rady je pro něj hotový příkaz pro Fachmana.

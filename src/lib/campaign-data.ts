@@ -3,7 +3,7 @@
  * saved by the Fachman bridge. Goal comparison and advice only ever read this shape.
  */
 import { useSyncExternalStore } from 'react';
-import { clients, getAnalytics } from './analytics-data';
+import { clients, getAnalytics, isCustomClient } from './analytics-data';
 
 export type Channel = 'Google Ads' | 'Meta Ads' | 'E-mail';
 export type CampaignKind = 'brand' | 'remarketing' | 'pmax' | 'search' | 'prospecting' | 'email' | 'other';
@@ -57,7 +57,7 @@ export const bridgeStore = {
 export const useBridge = () => useSyncExternalStore(bridgeStore.subscribe, bridgeStore.get, bridgeStore.get);
 
 export type CampaignData = {
-  origin: 'demo' | 'fachman';
+  origin: 'demo' | 'fachman' | 'none';
   /** Human wording for banners, e.g. "Ukázková data" or "Data z Fachmana (Google Ads, Meta Ads)". */
   label: string;
   /** Length of the period the numbers cover; null when unknown or mixed. */
@@ -77,6 +77,7 @@ function demoCampaigns(client: number, days: number): ChannelCampaign[] {
 /** Imported Fachman files for the client win over the demo data. */
 export function getCampaignData(client: number, days: number, imported: Record<string, BridgeDataset[]> = bridge): CampaignData {
   const sets = imported[clients[client] ?? ''] ?? [];
+  if (sets.length === 0 && isCustomClient(client)) return { origin: 'none', label: 'Zatím žádná data', days, campaigns: [], notes: [] };
   if (sets.length === 0) return { origin: 'demo', label: 'Ukázková data', days, campaigns: demoCampaigns(client, days), notes: [] };
   const periods = new Set(sets.map(s => s.days));
   return {

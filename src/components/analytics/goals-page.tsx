@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { PageHeader, SectionHeading } from './controls';
 import { CsvPicker } from './csv-picker';
 import { useWorkspace } from './workspace';
-import { clientConfig, clients } from '@/lib/analytics-data';
+import { clientConfig, clients, customClientOf } from '@/lib/analytics-data';
 import { getCampaignData, useBridge } from '@/lib/campaign-data';
 import { defaultKpi, formatMetric, goalChannels, goalPeriods, goalsFromMarkdown, goalsToMarkdown, metricInfo, newGoalId, operatorOf, periodLabel, type ClientGoals, type GoalChannel, type GoalMetric, type GoalPeriod, type KpiGoal } from '@/lib/goals';
 import { goalsStore, useGoals } from '@/lib/goals-store';
@@ -16,7 +16,7 @@ import { tasksStore, useTasks } from '@/lib/tasks-store';
 
 export function GoalsPage() {
   const { client } = useWorkspace();
-  const name = clients[client] ?? clients[0];
+  const name = clients[client] ?? clients[0] ?? "";
   const model = clientConfig(client);
   const all = useGoals();
   const bridge = useBridge();
@@ -28,7 +28,9 @@ export function GoalsPage() {
   const ctx = { dataFor: (days: number) => getCampaignData(client, days, bridge), organicClicks: queryRows ? sumRows(queryRows).clicks : null };
   const progress = computeProgress(goals, ctx);
   const advice = buildAdvice(progress, { ...ctx, client, organicRecommendations: gscRecommendations().length });
-  const dataLabel = getCampaignData(client, 30, bridge).label;
+  const dataInfo = getCampaignData(client, 30, bridge);
+  const dataLabel = dataInfo.label;
+  const slug = customClientOf(client)?.slug ?? 'klient';
   const sourceKey = (a: GoalAdvice) => `goal:${name}:${a.id}`;
   const sent = (a: GoalAdvice) => tasks.some(t => t.sourceKey === sourceKey(a));
   const [channelFilter, setChannelFilter] = useState('Všechny');
@@ -36,7 +38,8 @@ export function GoalsPage() {
 
   return <main className="page-content">
     <PageHeader title="Cíle a rady" description={`Co chce ${name} dosáhnout, jak daleko to je a co udělat u konkrétní kampaně.`} />
-    <div className="info-banner"><Target size={18} /><span>{dataLabel === 'Ukázková data' ? 'Zatím počítám s ukázkovými daty, žádná čísla nejsou skutečná. Skutečná čísla z Fachmana nahrajete na stránce ' : `${dataLabel} nahrazují ukázková čísla pro klienta ${name}. Další zdroje najdete na stránce `}<Link to="/datove-zdroje" className="gsc-link">Datové zdroje</Link>.</span></div>
+    {dataInfo.origin === 'none' ? <div className="info-banner"><Target size={18} /><span>Pro klienta {name} zatím nejsou žádná čísla z kampaní. Nejdřív si můžete nastavit cíle. Čísla získáte takto: ve složce AVIX spusťte <code>python3 scripts/most_fachman.py {slug} --google 123-456-7890 --meta act_123456 --dny 30</code> (ID účtů doplňte vlastní, stačí jen jedno) a soubory ze složky data-most nahrajte na stránce <Link to="/datove-zdroje" className="gsc-link">Datové zdroje</Link>.</span></div>
+      : <div className="info-banner"><Target size={18} /><span>{dataLabel === 'Ukázková data' ? 'Zatím počítám s ukázkovými daty, žádná čísla nejsou skutečná. Skutečná čísla z Fachmana nahrajete na stránce ' : `${dataLabel} nahrazují ukázková čísla pro klienta ${name}. Další zdroje najdete na stránce `}<Link to="/datove-zdroje" className="gsc-link">Datové zdroje</Link>.</span></div>}
 
     <GoalForm key={name} name={name} goals={goals} model={model} />
 

@@ -105,3 +105,29 @@ describe('Fachman bridge', () => {
     expect(getCampaignData(0, 30, {}).origin).toBe('demo');
   });
 });
+
+import { clientModel, clients, isCustomClient } from '@/lib/analytics-data';
+import { clientsStore, slugify } from '@/lib/clients-store';
+
+describe('own clients', () => {
+  beforeEach(() => clientsStore.reset());
+  it('adds a client after the demo ones and starts empty, not with demo numbers', () => {
+    expect(clientsStore.add('Ordinace Dr. Nováková', 'services')).toBeNull();
+    const i = clients.indexOf('Ordinace Dr. Nováková');
+    expect(i).toBe(4);
+    expect(isCustomClient(i)).toBe(true);
+    expect(clientModel(i)).toBe('services');
+    expect(getCampaignData(i, 30, {}).origin).toBe('none');
+    expect(getCampaignData(i, 30, {}).campaigns).toHaveLength(0);
+  });
+  it('rejects empty and duplicate names and builds a folder name', () => {
+    expect(clientsStore.add(' ', 'b2b')).not.toBeNull();
+    expect(clientsStore.add('Greenly Store', 'ecommerce')).not.toBeNull();
+    expect(slugify('Ordinace Dr. Nováková')).toBe('ordinace-dr-novakova');
+  });
+  it('removing a client shrinks the list again', () => {
+    clientsStore.add('Test', 'hybrid');
+    clientsStore.remove('Test');
+    expect(clients).toHaveLength(4);
+  });
+});

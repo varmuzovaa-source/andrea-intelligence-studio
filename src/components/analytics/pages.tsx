@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { ArrowUpRight, Sparkles, Users, FileChartColumn, Download, Check, Link2, CircleAlert, Globe2, Mail, ShieldCheck, Plus } from 'lucide-react';
+import { ArrowUpRight, Sparkles, Users, FileChartColumn, Download, Check, Link2, CircleAlert, Globe2, Mail, ShieldCheck, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PageHeader, SectionHeading } from './controls';
 import { Metrics } from './metrics';
@@ -9,6 +9,8 @@ import { CampaignTable } from './campaign-table';
 import { Creatives } from './creatives';
 import { useWorkspace } from './workspace';
 import { Recommendations, RecoToggles } from './recommendations';
+import { clientsStore, slugify, useCustomClients } from '@/lib/clients-store';
+import type { BusinessModel } from '@/lib/business-models';
 import { gscRecommendations } from '@/lib/gsc-store';
 import { gscReportRows } from '@/lib/search-console';
 import { clients, demoClients, modelLabels, getModelKpis, getAnalytics, money, number, downloadCsv, getKeywords, getRecommendations } from '@/lib/analytics-data';
@@ -24,7 +26,7 @@ export function WebPage() {return <main className="page-content"><PageHeader tit
 export function CampaignsPage() {const [tab,setTab]=useState('campaigns');return <main className="page-content"><PageHeader title="Výkon kampaní" description="Od investice k výsledku. Každá kampaň pod kontrolou."/><Metrics/><div className="page-tabs" role="tablist" aria-label="Pohled na kampaně"><Button role="tab" aria-selected={tab==='campaigns'} variant="ghost" className={tab==='campaigns'?'active':''} onClick={()=>setTab('campaigns')}>Kampaně</Button><Button role="tab" aria-selected={tab==='creatives'} variant="ghost" className={tab==='creatives'?'active':''} onClick={()=>setTab('creatives')}>Kreativní výkon</Button></div>{tab==='campaigns'?<><CampaignTable/><Recommendations areas={['google','meta']} title="Doporučení pro Google Ads a Meta Ads"/><div className="charts-grid"><PerformanceChart/><ChannelChart/></div></>:<><Creatives full/><CampaignTable/></>}</main>;}
 export function ReportsPage() {
  const {client,period,reco}=useWorkspace();const data=getAnalytics(client,period);const [created,setCreated]=useState<string[]>([]);
- const name=clients[client] ?? clients[0];
+ const name=clients[client] ?? clients[0] ?? "";
  const exportReport=(file:string,audience:'firma'|'klient')=>{const recs=getRecommendations(client,period).filter(r=>reco[r.area]&&(audience==='firma'||r.audience==='Klient'||r.priority==='Vysoká'));
   const head=[['Klient',name],['Období (dní)',period],['Tržby (Kč)',data.revenue],['Náklady (Kč)',data.spend],['ROAS',(data.revenue/data.spend).toFixed(2)],['Konverze',data.conversions],[],audience==='firma'?['Oblast','Priorita','Doporučení','Zjištění','Co udělat','Předat','Pro','Dopad']:['Oblast','Doporučení','Co uděláme / co potřebujeme','Očekávaný přínos']];
   const gscRecs=gscRecommendations();const rows=[...recs.map(r=>{const area=r.area==='keywords'?'Klíčová slova':r.area==='google'?'Google Ads':'Meta Ads';return audience==='firma'?[area,r.priority,r.title,r.insight,r.action,r.recipient,r.audience,r.impact]:[area,r.title,r.audience==='Klient'?`Prosíme: ${r.action}`:r.action,r.impact];}),...gscReportRows(gscRecs,audience)];
@@ -38,6 +40,17 @@ export function SettingsPage() {
 export function ProfilePage() {return <main className="page-content"><PageHeader title="Uživatelský profil" description="Váš prostor v AVQIX."/><section className="profile-section"><span className="avatar profile-avatar">AV</span><div><h2>Andrea Varmužová</h2><p>Marketing manager</p><small>Ukázkový profil · přihlášení není nastavené</small></div></section></main>;}
 
 export function ClientsPage() {
- const { client, period, setClient } = useWorkspace(); const navigate = useNavigate();
- return <main className="page-content"><PageHeader title="Klienti" description="Všichni klienti a jejich obchodní modely na jednom místě."/><div className="reports-grid">{demoClients.map((c, i) => { const kpis = getModelKpis(i, period).slice(0, 2); return <article className="report-card" key={c.name}><Users size={28}/><small>{modelLabels[c.model].toUpperCase()}</small><h2>{c.name}</h2>{kpis.map(k => <p key={k.label} className="tabular-nums">{k.label}: <strong>{k.value}</strong></p>)}<div><span>{i === client ? 'Vybraný klient' : 'Demo data'}</span><Button size="sm" onClick={() => { setClient(i); navigate({ to: '/' }); }}>Otevřít<ArrowUpRight/></Button></div></article>; })}</div></main>;
+ const { client, period, setClient } = useWorkspace(); const navigate = useNavigate(); const custom = useCustomClients();
+ const [name, setName] = useState(''); const [model, setModel] = useState<BusinessModel>('ecommerce'); const [slug, setSlug] = useState(''); const [error, setError] = useState('');
+ const add = () => { const err = clientsStore.add(name, model, slug); setError(err ?? ''); if (!err) { setName(''); setSlug(''); setClient(demoClients.length + custom.length); navigate({ to: '/cile' }); } };
+ return <main className="page-content"><PageHeader title="Klienti" description="Všichni klienti a jejich obchodní modely na jednom místě."/>
+  <section className="reco-section"><SectionHeading title="Přidat klienta" subtitle="Skutečný klient začíná prázdný: žádná vymyšlená čísla, jen cíle a data, která nahrajete"/>
+   <div className="goal-form"><div className="goal-text-grid">
+    <label>Název klienta<input value={name} onChange={e => setName(e.target.value)} placeholder="např. Ordinace Dr. Nováková"/></label>
+    <label>Typ podnikání<select value={model} onChange={e => setModel(e.target.value as BusinessModel)}>{(Object.keys(modelLabels) as BusinessModel[]).map(m => <option key={m} value={m}>{modelLabels[m]}</option>)}</select></label>
+    <label>Krátké jméno složky (nepovinné)<input value={slug} onChange={e => setSlug(e.target.value)} placeholder={slugify(name) || 'ordinace-dr-novakova'}/><p className="goal-help">Stejné jako složka klienta v AGENTURA/klienti. Používá se v příkazu pro Fachmana.</p></label>
+   </div><div className="gsc-actions"><Button size="sm" onClick={add}><Plus/>Přidat klienta</Button></div>
+   {error && <p className="goal-help" role="alert">{error}</p>}<p className="goal-help">Klienti se ukládají jen v tomto prohlížeči.</p></div></section>
+  <div className="reports-grid">{demoClients.map((c, i) => { const kpis = getModelKpis(i, period).slice(0, 2); return <article className="report-card" key={c.name}><Users size={28}/><small>{modelLabels[c.model].toUpperCase()}</small><h2>{c.name}</h2>{kpis.map(k => <p key={k.label} className="tabular-nums">{k.label}: <strong>{k.value}</strong></p>)}<div><span>{i === client ? 'Vybraný klient' : 'Demo data'}</span><Button size="sm" onClick={() => { setClient(i); navigate({ to: '/' }); }}>Otevřít<ArrowUpRight/></Button></div></article>; })}
+  {custom.map((c, j) => { const i = demoClients.length + j; return <article className="report-card" key={c.name}><Users size={28}/><small>{modelLabels[c.model].toUpperCase()}</small><h2>{c.name}</h2><p>Složka: {c.slug}</p><div><span>{i === client ? 'Vybraný klient' : 'Váš klient'}</span><span><Button size="sm" variant="ghost" aria-label={`Odebrat klienta ${c.name}`} onClick={() => { if (i === client) setClient(0); clientsStore.remove(c.name); }}><Trash2/></Button><Button size="sm" onClick={() => { setClient(i); navigate({ to: '/cile' }); }}>Otevřít<ArrowUpRight/></Button></span></div></article>; })}</div></main>;
 }

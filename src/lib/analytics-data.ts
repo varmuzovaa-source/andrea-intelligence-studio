@@ -10,8 +10,19 @@ export const demoClients = [
   { name: 'Fasada Pro', model: 'b2b', monogram: 'f.', isDemo: true },
   { name: 'Studio Lumen', model: 'services', monogram: 'l.', isDemo: true },
 ] as const satisfies readonly { name: string; model: BusinessModel; monogram: string; isDemo: true }[];
-export const clients = demoClients.map(c => c.name) as unknown as readonly ['Greenly Store', 'Klinika Aurea', 'Fasada Pro', 'Studio Lumen'];
-export const clientModel = (client: number): BusinessModel => demoClients[client]?.model ?? 'ecommerce';
+/** Demo clients first, then clients the user added (see clients-store). Mutated in place by setCustomClients. */
+export const clients: string[] = demoClients.map(c => c.name);
+export type CustomClient = { name: string; model: BusinessModel; slug: string };
+let customList: CustomClient[] = [];
+export function setCustomClients(list: CustomClient[]) {
+  customList = list;
+  clients.length = demoClients.length;
+  list.forEach(c => clients.push(c.name));
+}
+export const isCustomClient = (client: number) => client >= demoClients.length;
+export const customClientOf = (client: number) => customList[client - demoClients.length];
+export const clientModel = (client: number): BusinessModel => demoClients[client]?.model ?? customClientOf(client)?.model ?? 'ecommerce';
+export const clientMonogram = (client: number) => demoClients[client]?.monogram ?? ((clients[client] ?? '?').charAt(0).toLowerCase() + '.');
 export const clientConfig = (client: number) => modelConfigs[clientModel(client)];
 export const creativeImages = [skincare, interior, sneaker];
 export const money = (value: number) => new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 0 }).format(value) + ' Kč';
@@ -64,7 +75,7 @@ export const recoAreas: { id: RecoArea; name: string }[] = [
 export type Recommendation = { id: string; area: RecoArea; priority: 'Vysoká' | 'Střední' | 'Nízká'; title: string; insight: string; action: string; recipient: string; audience: 'Interní' | 'Klient'; impact: string; confidence?: 'Vysoká' | 'Střední' | 'Nízká' };
 export function getKeywords(client: number, period: string) {
   const { multiplier } = getAnalytics(client, period);
-  const brand = (clients[client] ?? clients[0]).toLowerCase();
+  const brand = (clients[client] ?? clients[0] ?? "").toLowerCase();
   return [
     { word: brand, intent: 'Navigační', difficulty: 12 },
     { word: 'přírodní produkty', intent: 'Informační', difficulty: 48 },
@@ -83,7 +94,7 @@ export function getKeywords(client: number, period: string) {
 function ecommerceRecommendations(client: number, period: string): Recommendation[] {
   const data = getAnalytics(client, period);
   const kw = getKeywords(client, period);
-  const name = clients[client] ?? clients[0];
+  const name = clients[client] ?? clients[0] ?? "";
   const r = data.rows;
   const best = [...r].sort((a, b) => b.roas - a.roas)[0]!;
   const worst = [...r].filter(x => x.source === 'Meta Ads').sort((a, b) => a.roas - b.roas)[0]!;
