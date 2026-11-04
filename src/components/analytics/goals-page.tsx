@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { Check, ClipboardCopy, Lightbulb, Plus, RefreshCw, Send, Target, Trash2, Upload } from 'lucide-react';
+import { Check, ClipboardCopy, FileText, Lightbulb, Plus, RefreshCw, Send, Target, Trash2, Upload } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { PageHeader, SectionHeading } from './controls';
 import { CsvPicker } from './csv-picker';
 import { useWorkspace } from './workspace';
-import { clientConfig, clients, customClientOf, isCustomClient } from '@/lib/analytics-data';
+import { clientConfig, clients, customClientOf, isCustomClient, money, number } from '@/lib/analytics-data';
 import { clientsStore, useCustomClients } from '@/lib/clients-store';
+import { buildClientReportHtml, downloadHtml } from '@/lib/client-report';
+import { useEmailData } from '@/lib/email-data';
 import { liveAvailable, refreshFromFachman } from '@/lib/fachman-live';
 import { getCampaignData, useBridge } from '@/lib/campaign-data';
 import { defaultKpi, formatMetric, goalChannels, goalPeriods, goalsFromMarkdown, goalsToMarkdown, metricInfo, newGoalId, operatorOf, periodLabel, type ClientGoals, type GoalChannel, type GoalMetric, type GoalPeriod, type KpiGoal } from '@/lib/goals';
@@ -23,11 +25,12 @@ export function GoalsPage() {
   const all = useGoals();
   const bridge = useBridge();
   const gsc = useGscData();
+  const emails = useEmailData()[name] ?? [];
   const tasks = useTasks();
   const saved = all[name];
   const goals: ClientGoals = saved ?? { business: '', marketing: '', kpis: [], updatedAt: '' };
   const queryRows = gsc.current.query?.rows;
-  const ctx = { dataFor: (days: number) => getCampaignData(client, days, bridge), organicClicks: queryRows ? sumRows(queryRows).clicks : null };
+  const ctx = { dataFor: (days: number) => getCampaignData(client, days, bridge), organicClicks: queryRows ? sumRows(queryRows).clicks : null, emails };
   const progress = computeProgress(goals, ctx);
   const advice = buildAdvice(progress, { ...ctx, client, organicRecommendations: gscRecommendations().length });
   const dataInfo = getCampaignData(client, 30, bridge);
@@ -36,10 +39,16 @@ export function GoalsPage() {
   const sourceKey = (a: GoalAdvice) => `goal:${name}:${a.id}`;
   const sent = (a: GoalAdvice) => tasks.some(t => t.sourceKey === sourceKey(a));
   const [channelFilter, setChannelFilter] = useState('Všechny');
+  const makeReport = () => {
+    const cs = dataInfo.campaigns; const spend = cs.reduce((s, c) => s + c.spend, 0), revenue = cs.reduce((s, c) => s + c.revenue, 0), conv = cs.reduce((s, c) => s + c.conversions, 0);
+    const totals = cs.length ? [{ label: 'Náklady na reklamu', value: money(spend) }, ...(revenue > 0 ? [{ label: 'Tržby z reklam', value: money(revenue) }, { label: 'ROAS', value: (revenue / Math.max(spend, 1)).toFixed(2).replace('.', ',') + '×' }] : []), { label: model.vocab.conversions.charAt(0).toUpperCase() + model.vocab.conversions.slice(1), value: number(conv) }] : [];
+    downloadHtml(`report-${slug}-${new Date().toISOString().slice(0, 10)}.html`, buildClientReportHtml({ clientName: name, business: goals.business, marketing: goals.marketing, progress, advice, conversion: model.vocab.conversion, dataLabel, totals }));
+  };
   const shown = advice.filter(a => channelFilter === 'Všechny' || a.channel === channelFilter);
 
   return <main className="page-content">
     <PageHeader title="Cíle a rady" description={`Co chce ${name} dosáhnout, jak daleko to je a co udělat u konkrétní kampaně.`} />
+    {progress.length > 0 && <div className="gsc-actions"><Button size="sm" variant="outline" onClick={makeReport}><FileText />Report pro klienta (jen k nahlédnutí)</Button><span className="goal-help">Stáhne se jeden soubor, který klient jen otevře a přečte. Je to snímek z tohoto okamžiku.</span></div>}
     {dataInfo.origin === 'none' ? <div className="info-banner"><Target size={18} /><span>Pro klienta {name} zatím nejsou žádná čísla z kampaní. Nejdřív si můžete nastavit cíle. Čísla získáte takto: ve složce avqix-intelligence-studio spusťte <code>python3 scripts/most_fachman.py {slug} --google 123-456-7890 --meta act_123456 --dny 30</code> (ID účtů doplňte vlastní, stačí jen jedno) a soubory ze složky data-most nahrajte na stránce <Link to="/datove-zdroje" className="gsc-link">Datové zdroje</Link>.</span></div>
       : <div className="info-banner"><Target size={18} /><span>{dataLabel === 'Ukázková data' ? 'Zatím počítám s ukázkovými daty, žádná čísla nejsou skutečná. Skutečná čísla z Fachmana nahrajete na stránce ' : `${dataLabel} nahrazují ukázková čísla pro klienta ${name}. Další zdroje najdete na stránce `}<Link to="/datove-zdroje" className="gsc-link">Datové zdroje</Link>.</span></div>}
 

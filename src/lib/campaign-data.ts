@@ -36,7 +36,8 @@ export function kindOf(name: string, channelType?: string): CampaignKind {
 
 export type BridgeSource = 'google_ads' | 'meta_ads';
 export const bridgeSourceLabel: Record<BridgeSource, string> = { google_ads: 'Google Ads', meta_ads: 'Meta Ads' };
-export type BridgeDataset = { source: BridgeSource; fileName: string; days: number | null; campaigns: ChannelCampaign[]; notes: string[]; fetchedAt?: string };
+export type DailyPoint = { date: string; spend: number; revenue: number; conversions: number };
+export type BridgeDataset = { source: BridgeSource; fileName: string; days: number | null; campaigns: ChannelCampaign[]; notes: string[]; fetchedAt?: string; daily?: DailyPoint[] };
 
 /* ---------- in-memory store of imported Fachman files (never persisted, like Search Console) ---------- */
 let bridge: Record<string, BridgeDataset[]> = {};

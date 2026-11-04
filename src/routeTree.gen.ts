@@ -21,6 +21,7 @@ import { Route as ReportyRouteImport } from './routes/reporty'
 import { Route as SearchConsoleRouteImport } from './routes/search-console'
 import { Route as UkolyRouteImport } from './routes/ukoly'
 import { Route as WebRouteImport } from './routes/web'
+import { Route as ApiKlientiRouteImport } from './routes/api.klienti'
 import { Route as ApiMostRouteImport } from './routes/api.most'
 
 const IndexRoute = IndexRouteImport.update({
@@ -83,6 +84,11 @@ const WebRoute = WebRouteImport.update({
   path: '/web',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiKlientiRoute = ApiKlientiRouteImport.update({
+  id: '/api/klienti',
+  path: '/api/klienti',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiMostRoute = ApiMostRouteImport.update({
   id: '/api/most',
   path: '/api/most',
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/search-console': typeof SearchConsoleRoute
   '/ukoly': typeof UkolyRoute
   '/web': typeof WebRoute
+  '/api/klienti': typeof ApiKlientiRoute
   '/api/most': typeof ApiMostRoute
 }
 export interface FileRoutesByTo {
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/search-console': typeof SearchConsoleRoute
   '/ukoly': typeof UkolyRoute
   '/web': typeof WebRoute
+  '/api/klienti': typeof ApiKlientiRoute
   '/api/most': typeof ApiMostRoute
 }
 export interface FileRoutesById {
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/search-console': typeof SearchConsoleRoute
   '/ukoly': typeof UkolyRoute
   '/web': typeof WebRoute
+  '/api/klienti': typeof ApiKlientiRoute
   '/api/most': typeof ApiMostRoute
 }
 export interface FileRouteTypes {
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/search-console'
     | '/ukoly'
     | '/web'
+    | '/api/klienti'
     | '/api/most'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/search-console'
     | '/ukoly'
     | '/web'
+    | '/api/klienti'
     | '/api/most'
   id:
     | '__root__'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '/search-console'
     | '/ukoly'
     | '/web'
+    | '/api/klienti'
     | '/api/most'
   fileRoutesById: FileRoutesById
 }
@@ -196,6 +208,7 @@ export interface RootRouteChildren {
   SearchConsoleRoute: typeof SearchConsoleRoute
   UkolyRoute: typeof UkolyRoute
   WebRoute: typeof WebRoute
+  ApiKlientiRoute: typeof ApiKlientiRoute
   ApiMostRoute: typeof ApiMostRoute
 }
 
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WebRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/klienti': {
+      id: '/api/klienti'
+      path: '/api/klienti'
+      fullPath: '/api/klienti'
+      preLoaderRoute: typeof ApiKlientiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/most': {
       id: '/api/most'
       path: '/api/most'
@@ -308,6 +328,7 @@ const rootRouteChildren: RootRouteChildren = {
   SearchConsoleRoute: SearchConsoleRoute,
   UkolyRoute: UkolyRoute,
   WebRoute: WebRoute,
+  ApiKlientiRoute: ApiKlientiRoute,
   ApiMostRoute: ApiMostRoute,
 }
 export const routeTree = rootRouteImport

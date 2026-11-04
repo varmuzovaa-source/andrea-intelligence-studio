@@ -94,7 +94,7 @@ export const connectors: Connector[] = [
     description: 'Newslettery a automatizace.',
     connectionNote: 'Podle nástroje (např. ActiveCampaign, Klaviyo), API klíč (později).',
     csv: {
-      hint: 'Export statistik kampaní z e-mailového nástroje.', feedsApp: false,
+      hint: 'Export statistik kampaní z e-mailového nástroje (název, odesláno, otevření, kliknutí, odhlášení).', feedsApp: true,
       columns: [
         col('campaign', 'Kampaň', true, 'campaign', 'campaign name', 'kampan', 'nazev kampane'),
         col('sent', 'Odesláno', true, 'sent', 'delivered', 'odeslano', 'doruceno'),

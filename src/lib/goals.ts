@@ -42,12 +42,15 @@ export type MetricInfo = {
 export const metricInfo: Record<GoalMetric, MetricInfo> = {
   roas: { label: () => 'Návratnost reklamy (ROAS)', unit: '×', better: 'up', decimals: 2, code: 'ROAS', help: () => 'Kolik korun tržeb přinese každá koruna utracená za reklamu. 5× znamená 5 Kč tržeb za 1 Kč reklamy.' },
   pno: { label: () => 'Podíl nákladů na tržbách (PNO)', unit: '%', better: 'down', decimals: 1, code: 'PNO', help: () => 'Kolik procent z tržeb se utratí za reklamu. Čím méně, tím lépe. 20 % odpovídá ROAS 5×.' },
-  cpa: { label: c => `Cena za ${c} (CPA)`, unit: 'Kč', better: 'down', decimals: 0, code: 'CPA', help: c => `Kolik reklama stojí jedna ${c}. Čím méně, tím lépe.` },
+  cpa: { label: c => `Cena za jeden výsledek (${c}, CPA)`, unit: 'Kč', better: 'down', decimals: 0, code: 'CPA', help: c => `Kolik reklama stojí jedna ${c}. Čím méně, tím lépe.` },
   revenue: { label: () => 'Tržby z reklam', unit: 'Kč', better: 'up', decimals: 0, code: 'Tržby', help: () => 'Kolik korun tržeb reklamy přinesly za období.' },
   conversions: { label: c => `Počet: ${c}`, unit: 'ks', better: 'up', decimals: 0, code: 'Konverze', help: c => `Kolik jich reklamy přivedly za období (${c}).` },
   spend: { label: () => 'Rozpočet na reklamu (strop)', unit: 'Kč', better: 'down', decimals: 0, code: 'Rozpočet', help: () => 'Kolik nejvíc chcete za období utratit. Překročení stropu je signál ke kontrole.' },
   ctr: { label: () => 'Míra prokliku (CTR)', unit: '%', better: 'up', decimals: 2, code: 'CTR', help: () => 'Kolik procent lidí, kterým se reklama zobrazila, na ni klikne. Čím víc, tím zajímavější reklama.' },
   cpc: { label: () => 'Cena za proklik (CPC)', unit: 'Kč', better: 'down', decimals: 1, code: 'CPC', help: () => 'Kolik stojí jedno kliknutí na reklamu. Čím méně, tím lépe.' },
+  openRate: { label: () => 'Otevřenost e-mailů', unit: '%', better: 'up', decimals: 1, code: 'Otevřenost', help: () => 'Kolik procent příjemců e-mail otevřelo. Závisí hlavně na předmětu a odesílateli.' },
+  clickRate: { label: () => 'Prokliky v e-mailech', unit: '%', better: 'up', decimals: 1, code: 'Prokliky e-mailů', help: () => 'Kolik procent příjemců kliklo na odkaz v e-mailu. Závisí na obsahu a tlačítku.' },
+  unsubRate: { label: () => 'Odhlášení z e-mailů', unit: '%', better: 'down', decimals: 2, code: 'Odhlášení', help: () => 'Kolik procent příjemců se odhlásilo. Čím méně, tím lépe.' },
   organicClicks: { label: () => 'Kliknutí z Googlu zdarma', unit: 'ks', better: 'up', decimals: 0, code: 'Organická kliknutí', help: () => 'Kolikrát lidé klikli na váš web ve výsledcích vyhledávání. Bere se z importu ze Search Console.' },
 };
 

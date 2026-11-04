@@ -52,7 +52,10 @@ code{background:#eee;padding:.3mm 1.3mm;border-radius:1mm;font-size:9pt}
 <li>Poradit pravidly, co udělat u konkrétní kampaně, s prioritou a jistotou</li>
 <li>Vytvořit úkol tlačítkem Předat, sledovat stav, export CSV</li>
 <li>Stáhnout skutečná čísla z Google Ads a Meta Ads přes Fachmana, zdarma a lokálně</li>
-<li>Vlastní klienty, kteří začínají prázdní (žádná vymyšlená čísla)</li>
+<li>Vlastní klienty (i načtení ze složky AGENTURA/klienti), kteří začínají prázdní bez vymyšlených čísel</li>
+<li>Přehled a kampaně pro vlastní klienty: čísla, vývoj v čase po dnech, kanály, tabulka, export CSV</li>
+<li>E-mailing z CSV: otevřenost, prokliky, odhlášení, cíle a rady k nejslabším e-mailům</li>
+<li><b>Report pro klienta</b>: soubor jen k nahlédnutí (cíle, plnění, další kroky)</li>
 <li>Rozebrat export ze Search Console a najít příležitosti</li>
 <li>Přenést cíle do souboru klienta pro Fachmana a zpět</li>
 </ul></div>
@@ -60,8 +63,9 @@ code{background:#eee;padding:.3mm 1.3mm;border-radius:1mm;font-size:9pt}
 <li>Měnit cokoli v reklamních účtech. Rady jen navrhují, co udělat.</li>
 <li>Živá data. Čísla jsou z okamžiku posledního stažení.</li>
 <li>Sdílet cíle, klienty a úkoly mezi počítači nebo lidmi (ukládá jen do prohlížeče).</li>
-<li>Přehledy, grafy a reporty pro vlastní klienty (zatím jen pro ukázkové)</li>
-<li>Skutečná e-mailová data (ActiveCampaign aj. zatím nejsou napojená)</li>
+<li>Organiku a Výkon webu pro vlastní klienty (jen Search Console z CSV) a CRM (leady, zakázky)</li>
+<li>Přímé napojení e-mailových nástrojů (zatím jen CSV export)</li>
+<li>Klikací odkaz pro klienta bez nahrání souboru na hosting</li>
 <li>Stáhnout data tlačítkem na veřejném webu (jen na tvém počítači)</li>
 <li>Hluboké analýzy jako Fachman: vyhledávací dotazy, negativní slova, A/B testy, PMax rozpad</li>
 </ul></div>
@@ -72,7 +76,8 @@ code{background:#eee;padding:.3mm 1.3mm;border-radius:1mm;font-size:9pt}
 <p><b>Fachman</b> je tvůj PPC asistent (v Claude Code, složka <code>~/AGENTURA/PPC</code>). Umí číst Google Ads, Meta, GA4 a Sklik, analyzovat účty do hloubky a po tvém schválení navrhovat nebo provádět změny. <b>AVQIX</b> je vrstva nad ním pro cíle, přehled a práci týmu.</p>
 <table>
 <tr><th>Co se děje</th><th>Jak</th></tr>
-<tr><td>Čísla kampaní z účtů</td><td>V AVQIX klikneš <b>Aktualizovat z Fachmana</b>. Appka spustí jeho čtecí skripty (jen čtení) a načte výsledek. Funguje jen při spuštění přes <code>Spustit-AVQIX.command</code> na tvém počítači.</td></tr>
+<tr><td>Čísla kampaní z účtů</td><td>V AVQIX klikneš <b>Aktualizovat z Fachmana</b>. Appka spustí jeho čtecí skripty (jen čtení, čísla po dnech) a načte výsledek. Funguje jen při spuštění přes <code>Spustit-AVQIX.command</code> na tvém počítači.</td></tr>
+<tr><td>Klienti a jejich ID</td><td>Tlačítko „Načíst klienty ze složky AGENTURA“ přečte složky klientů a jejich <code>ppc/ppc.md</code> (ID účtů, typ, cíle ve formátu <code>- KPI: …</code>).</td></tr>
 <tr><td>Přístupy do účtů</td><td>Zůstávají jen ve Fachmanovi na tvém počítači. AVQIX je nečte.</td></tr>
 <tr><td>Cíle klienta</td><td>V AVQIX <b>Zkopírovat pro Fachmana</b> a vložit do části „2. Cíle (KPI)“ souboru <code>ppc.md</code> klienta. Zpět <b>Načíst z ppc.md</b>. Fachman i AVQIX tak mluví o stejných cílech.</td></tr>
 <tr><td>Provedení změn v účtu</td><td>Vždy přes Fachmana a jen po tvém schválení. AVQIX nic nezapisuje.</td></tr>
@@ -86,6 +91,7 @@ code{background:#eee;padding:.3mm 1.3mm;border-radius:1mm;font-size:9pt}
 <tr><td>Rychlý týdenní přehled a předání úkolů týmu</td><td><b>AVQIX</b></td><td>Předat → Úkoly týmu → Export CSV.</td></tr>
 <tr><td>Příprava na schůzku s klientem</td><td><b>AVQIX</b></td><td>Jasné „splněno / skoro / pod cílem“ a konkrétní kroky.</td></tr>
 <tr><td>Zadání cílů klienta a jejich sdílení s Fachmanem</td><td><b>AVQIX</b></td><td>Jeden formát cílů pro obě strany.</td></tr>
+<tr><td>Hotový report pro klienta, který jen čte</td><td><b>AVQIX</b></td><td>Cíle a rady → Report pro klienta (soubor HTML k odeslání nebo nahrání na hosting).</td></tr>
 <tr><td>Organické vyhledávání (Search Console)</td><td><b>AVQIX</b></td><td>Import CSV a pravidlová doporučení.</td></tr>
 <tr><td>„Proč kampaň nefunguje?“ (hluboká analýza)</td><td><b>Fachman</b></td><td>Rozpad na dotazy, klíčová slova, produkty, meziroční srovnání, audit negativ.</td></tr>
 <tr><td>Přímá změna v účtu: rozpočty, bidy, negativa, reklamy</td><td><b>Fachman</b></td><td>Umí zapsat změny po schválení s náhledem (dry-run) a zapsat do changelogu.</td></tr>

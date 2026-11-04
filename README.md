@@ -1,6 +1,6 @@
 # AVQIX Intelligence Studio
 
-**Z cílů klienta udělá konkrétní rady: u které kampaně co změnit, v jakém kanálu a komu to předat.**
+**Z cílů klienta udělá konkrétní rady: u které kampaně co změnit, v jakém kanálu a komu to předat. Funguje s Fachmanem (PPC asistent) a zdarma na tvém počítači.**
 
 ![Přehled výkonu](docs/screenshot-prehled.png)
 
@@ -23,7 +23,10 @@ Pro agentury a freelancery, kteří vedou víc klientů, a pro začátečníky v
 ## Co umí
 
 - **Cíle a rady** (`/cile`): zadání cílů, porovnání skutečnost × cíl, rady po kampaních, Předat.
-- **Vlastní klienti** (`/klienti`): přidání klienta, který začíná prázdný a neukazuje žádná vymyšlená čísla.
+- **Vlastní klienti** (`/klienti`): přidání klienta, nebo načtení všech klientů ze složky `AGENTURA/klienti` (včetně ID účtů a cílů z jejich `ppc/ppc.md`). Klient začíná prázdný, bez vymyšlených čísel.
+- **Přehled a kampaně pro vlastní klienty:** náklady, tržby, ROAS, výsledky, graf vývoje v čase po dnech, rozpad po kanálech, tabulka kampaní, export CSV.
+- **E-mailing:** import CSV z e-mailového nástroje, cíle pro otevřenost, prokliky a odhlášení a rady k nejslabším e-mailům.
+- **Report pro klienta:** jeden soubor HTML jen k nahlédnutí (cíle, jak jsme na tom, co děláme dál). Klient ho jen otevře a přečte, nic v něm nemění. Pošleš ho e-mailem, nebo nahraješ na vlastní hosting a pošleš odkaz.
 - **Skutečná čísla z Google Ads a Meta Ads zdarma a lokálně** přes [Fachmana](#propojení-s-fachmanem) (jen čtení účtů), stahují se tlačítkem **Aktualizovat z Fachmana**.
 - **Úkoly týmu** (`/ukoly`): kdo úkol řeší, stav, export CSV.
 - **Search Console** (`/search-console`): nahrání CSV exportu, hledání příležitostí (hodně zobrazení s nízkým CTR, pozice 8 až 20, poklesy) a pravidlová doporučení.
@@ -32,9 +35,10 @@ Pro agentury a freelancery, kteří vedou víc klientů, a pro začátečníky v
 
 ## Co zatím neumí
 
-- Přehledy, grafy a reporty pro vlastní klienty (jen Cíle a rady, Úkoly, Search Console, Datové zdroje).
-- Skutečná data pro e-mailing.
-- Sdílení mezi lidmi nebo počítači: cíle, klienti a úkoly se ukládají jen v prohlížeči, ve kterém je zadáte. Čísla z kampaní se po obnovení stránky smažou.
+- Organika a Výkon webu pro vlastní klienty (zatím jen Search Console přes CSV) a CRM (leady, zakázky).
+- Přímé připojení e-mailových nástrojů (zatím jen CSV export).
+- Živý klikací odkaz pro klienta. Report je soubor, odkaz vznikne až když ho někam nahraješ.
+- Sdílení mezi lidmi nebo počítači: cíle, klienti a úkoly se ukládají jen v prohlížeči, ve kterém je zadáte. Čísla z kampaní se po obnovení stránky smažou. Společná databáze s přihlášením je další velký krok.
 - Žádné změny v reklamních účtech. Rady jen navrhují, co udělat.
 - Čísla nejsou živá, jsou z okamžiku posledního stažení.
 
@@ -54,6 +58,8 @@ Chcete si to nejdřív vyzkoušet? Přidejte zkušebního klienta a na stránce 
 
 Fachman je můj PPC asistent (Claude Code skill) s read-only skripty pro Google Ads a Meta. AVQIX ho volá přes malý lokální most:
 
+- Klienty i jejich ID účtů a cíle umí appka načíst ze složky `AGENTURA/klienti` (tlačítko na stránce Klienti).
+- Čísla se stahují **po dnech** (`campaigns_daily` pro Google Ads a `time_increment=1` pro Meta), proto jde v Přehledu vidět vývoj v čase.
 - Na stránce Cíle a rady vyplníte u klienta Google Ads ID a/nebo Meta ID a kliknete na **Aktualizovat z Fachmana**. Appka spustí `scripts/most_fachman.py`, který Fachmanovy čtecí skripty zavolá a výsledek uloží do složky `data-most/` (v `.gitignore`, do gitu se nedostane).
 - Funguje jen při lokálním spuštění přes `./start.sh` (proměnná `AVQIX_LOCAL=1`) a jen z localhostu. Na veřejném webu je tato funkce vypnutá.
 - Přístupy do účtů zůstávají jen ve Fachmanovi (`.env`), AVQIX je nečte. Bez nastaveného Fachmana tlačítko nepůjde, ostatní části appky ano.
