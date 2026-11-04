@@ -58,4 +58,5 @@ export const tasksStore = {
   reset(next: Task[] = []) { commit(next); },
 };
 
-export const useTasks = () => useSyncExternalStore(tasksStore.subscribe, tasksStore.get, () => []);
+const EMPTY: Task[] = [];
+export const useTasks = () => useSyncExternalStore(tasksStore.subscribe, tasksStore.get, () => EMPTY);

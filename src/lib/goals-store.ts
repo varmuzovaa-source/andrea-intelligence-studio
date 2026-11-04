@@ -31,4 +31,5 @@ export const goalsStore = {
   reset(next: Record<string, ClientGoals> = {}) { commit(next); },
 };
 
-export const useGoals = () => useSyncExternalStore(goalsStore.subscribe, goalsStore.get, () => ({}) as Record<string, ClientGoals>);
+const EMPTY: Record<string, ClientGoals> = {};
+export const useGoals = () => useSyncExternalStore(goalsStore.subscribe, goalsStore.get, () => EMPTY);
