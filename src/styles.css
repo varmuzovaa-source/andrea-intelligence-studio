@@ -84,3 +84,16 @@ button { box-shadow:none!important; } a { text-decoration:none; } select { curso
 .ai-toggle {display:flex;gap:10px;align-items:center;font-size:11px;}
 .ai-provider {display:flex;flex-direction:column;gap:6px;font-size:10px;color:var(--muted-foreground);max-width:260px;}
 @media(max-width:767px) { .gsc-import,.connector-grid {grid-template-columns:1fr;} .connector-head {flex-wrap:wrap;} .connector-head .integration-state {margin:0 0 0 62px;} }
+
+/* ---- Úkoly týmu ---- */
+.task-board {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:start;}
+.task-column {display:grid;gap:12px;}
+.task-column h3 {font-size:11px;display:flex;gap:8px;align-items:center;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.task-column h3 span {color:var(--muted-foreground);font-weight:400;}
+.task-card h3 {font-size:12px;border:0;padding:0;}
+.task-owner {display:flex;flex-direction:column;gap:6px;font-size:10px;color:var(--muted-foreground);margin-top:10px;}
+.task-owner input,.task-select {height:32px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--card);padding:0 10px;font-size:11px;color:var(--foreground);}
+.task-actions {display:flex;justify-content:space-between;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.task-status {display:flex;gap:6px;flex-wrap:wrap;}
+.task-status button {height:28px;font-size:10px;}
+@media(max-width:900px) { .task-board {grid-template-columns:1fr;} }

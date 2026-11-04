@@ -134,6 +134,10 @@ export type GscRecommendation = {
   title: string;
   insight: string;
   action: string;
+  /** Who should take this on, and whether it is for the client or the internal team. */
+  recipient: string;
+  audience: 'Klient' | 'Interní tým';
+  impact: string;
   examples: string[];
 };
 
@@ -152,6 +156,7 @@ export function buildRecommendations(dimension: GscDimension, opp: ReturnType<ty
       action: dimension === 'query'
         ? 'Přepište title a meta description tak, aby odpovídaly záměru dotazu a nesly konkrétní přínos nebo číslo. Zkontrolujte, zda se na dotaz nezobrazuje silnější výsledek nad vámi (reklamy, výpis).'
         : 'U těchto stránek přepište title a meta description, ověřte strukturovaná data a zda se zobrazuje správný snippet.',
+      recipient: 'SEO copywriter', audience: 'Interní tým', impact: `až +${sum(opp.lowCtr)} kliknutí za období`,
       examples: top(opp.lowCtr),
     });
   }
@@ -161,6 +166,7 @@ export function buildRecommendations(dimension: GscDimension, opp: ReturnType<ty
       title: `${opp.nearPageOne.length} ${noun} na pozicích 8–20 stojí za posílení`,
       insight: `Jsou těsně pod nebo na hraně první stránky a mají poptávku. Posun kolem 5. místa by mohl přinést až ${sum(opp.nearPageOne)} kliknutí navíc (odhad, ne příslib).`,
       action: 'Doplňte obsah o chybějící podtémata, přidejte interní odkazy z silných stránek s přesným anchor textem a zkontrolujte, zda stránka odpovídá záměru hledání.',
+      recipient: 'SEO specialista', audience: 'Interní tým', impact: `až +${sum(opp.nearPageOne)} kliknutí za období`,
       examples: top(opp.nearPageOne),
     });
   }
@@ -170,6 +176,7 @@ export function buildRecommendations(dimension: GscDimension, opp: ReturnType<ty
       title: `Pokles u ${opp.drops.length} ${noun} proti předchozímu období`,
       insight: `Přišli jste přibližně o ${sum(opp.drops)} kliknutí. Pokles se týká ${noun}, které předtím fungovaly.`,
       action: 'Ověřte změny na webu v daném období (přesměrování, přepis obsahu, technická chyba, indexace) a sezónnost. Teprve pak rozhodněte o zásahu.',
+      recipient: 'Správce webu (potvrdit změny)', audience: 'Klient', impact: `zastavit ztrátu až ${sum(opp.drops)} kliknutí`,
       examples: top(opp.drops),
     });
   } else if (!hasPrevious) {
@@ -178,6 +185,7 @@ export function buildRecommendations(dimension: GscDimension, opp: ReturnType<ty
       title: 'Poklesy nelze vyhodnotit bez předchozího období',
       insight: 'Nahráli jste jen jedno období, takže chybí srovnání.',
       action: 'Nahrajte druhý export za předchozí srovnatelné období (stejná délka).',
+      recipient: 'Andrea', audience: 'Interní tým', impact: 'umožní vyhodnotit poklesy',
       examples: [],
     });
   }
@@ -187,8 +195,23 @@ export function buildRecommendations(dimension: GscDimension, opp: ReturnType<ty
       title: 'Při aktuálním nastavení prahů nic zásadního nevychází',
       insight: 'Žádný řádek nesplnil podmínky pro nízké CTR, pozice 8–20 ani pokles.',
       action: 'Zkuste snížit minimální počet zobrazení, nebo nahrajte větší export.',
+      recipient: 'Andrea', audience: 'Interní tým', impact: 'žádný zásah není potřeba',
       examples: [],
     });
   }
   return out;
 }
+
+/** Rows for the Reporty CSV export, in the same column layout as the demo recommendations. */
+export function gscReportRows(recs: GscRecommendation[], audience: 'firma' | 'klient'): (string | number)[][] {
+  return recs.filter(r => r.id !== 'nothing').map(r => audience === 'firma'
+    ? ['Search Console', r.priority, r.title, r.insight, r.action, r.recipient, r.audience, r.impact]
+    : ['Search Console', r.title, r.audience === 'Klient' ? `Prosíme: ${r.action}` : r.action, r.impact]);
+}
+
+/** What the analysis looks for, shown before any data is imported. */
+export const gscRules = [
+  { title: 'Nízké CTR při dobré pozici', what: 'Dotazy v top 10 s hodně zobrazeními, na které málokdo klikne.', todo: 'Přepsat title a meta description, aby slibovaly konkrétní přínos.' },
+  { title: 'Pozice 8 až 20', what: 'Dotazy a stránky těsně pod první stránkou nebo na její hraně.', todo: 'Doplnit obsah, přidat interní odkazy, ověřit záměr hledání.' },
+  { title: 'Poklesy proti minulému období', what: 'Co ztratilo kliknutí nebo pozici (vyžaduje druhý export).', todo: 'Zkontrolovat změny na webu, indexaci a sezónnost, než se cokoli upraví.' },
+];

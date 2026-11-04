@@ -18,6 +18,7 @@ import { Route as OrganikaRouteImport } from './routes/organika'
 import { Route as ProfilRouteImport } from './routes/profil'
 import { Route as ReportyRouteImport } from './routes/reporty'
 import { Route as SearchConsoleRouteImport } from './routes/search-console'
+import { Route as UkolyRouteImport } from './routes/ukoly'
 import { Route as WebRouteImport } from './routes/web'
 
 const IndexRoute = IndexRouteImport.update({
@@ -65,6 +66,11 @@ const SearchConsoleRoute = SearchConsoleRouteImport.update({
   path: '/search-console',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UkolyRoute = UkolyRouteImport.update({
+  id: '/ukoly',
+  path: '/ukoly',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WebRoute = WebRouteImport.update({
   id: '/web',
   path: '/web',
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/profil': typeof ProfilRoute
   '/reporty': typeof ReportyRoute
   '/search-console': typeof SearchConsoleRoute
+  '/ukoly': typeof UkolyRoute
   '/web': typeof WebRoute
 }
 export interface FileRoutesByTo {
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/profil': typeof ProfilRoute
   '/reporty': typeof ReportyRoute
   '/search-console': typeof SearchConsoleRoute
+  '/ukoly': typeof UkolyRoute
   '/web': typeof WebRoute
 }
 export interface FileRoutesById {
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/profil': typeof ProfilRoute
   '/reporty': typeof ReportyRoute
   '/search-console': typeof SearchConsoleRoute
+  '/ukoly': typeof UkolyRoute
   '/web': typeof WebRoute
 }
 export interface FileRouteTypes {
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/reporty'
     | '/search-console'
+    | '/ukoly'
     | '/web'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/reporty'
     | '/search-console'
+    | '/ukoly'
     | '/web'
   id:
     | '__root__'
@@ -144,6 +155,7 @@ export interface FileRouteTypes {
     | '/profil'
     | '/reporty'
     | '/search-console'
+    | '/ukoly'
     | '/web'
   fileRoutesById: FileRoutesById
 }
@@ -157,6 +169,7 @@ export interface RootRouteChildren {
   ProfilRoute: typeof ProfilRoute
   ReportyRoute: typeof ReportyRoute
   SearchConsoleRoute: typeof SearchConsoleRoute
+  UkolyRoute: typeof UkolyRoute
   WebRoute: typeof WebRoute
 }
 
@@ -225,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchConsoleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ukoly': {
+      id: '/ukoly'
+      path: '/ukoly'
+      fullPath: '/ukoly'
+      preLoaderRoute: typeof UkolyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/web': {
       id: '/web'
       path: '/web'
@@ -245,6 +265,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfilRoute: ProfilRoute,
   ReportyRoute: ReportyRoute,
   SearchConsoleRoute: SearchConsoleRoute,
+  UkolyRoute: UkolyRoute,
   WebRoute: WebRoute,
 }
 export const routeTree = rootRouteImport

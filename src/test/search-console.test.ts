@@ -69,3 +69,13 @@ describe('AI payload', () => {
     expect(json).toContain('impressions');
   });
 });
+
+describe('recommendations hand-off and reports', () => {
+  it('every recommendation says who to hand it to and the impact', async () => {
+    const { buildRecommendations: build, findOpportunities: find, gscReportRows } = await import('@/lib/search-console');
+    const recs = build('query', find([row('low', 5, 1000, 3)], null), false);
+    expect(recs.every(r => r.recipient && r.impact)).toBe(true);
+    expect(gscReportRows(recs, 'firma')[0]).toHaveLength(8);
+    expect(gscReportRows(recs, 'klient')[0]).toHaveLength(4);
+  });
+});

@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { Lightbulb, Send, Check, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useWorkspace } from './workspace';
 import { SectionHeading } from './controls';
-import { getRecommendations, recoAreas, type RecoArea } from '@/lib/analytics-data';
+import { tasksStore, useTasks } from '@/lib/tasks-store';
+import { clients, getRecommendations, recoAreas, type RecoArea } from '@/lib/analytics-data';
 
 export function RecoToggles() {
   const { reco, toggleReco } = useWorkspace();
@@ -12,7 +12,9 @@ export function RecoToggles() {
 
 export function Recommendations({ areas, title = 'Doporučení' }: { areas: RecoArea[]; title?: string }) {
   const { client, period, reco, toggleReco } = useWorkspace();
-  const [sent, setSent] = useState<string[]>([]);
+  const tasks = useTasks();
+  const keyOf = (id: string) => `demo:${clients[client]}:${id}`;
+  const isSent = (id: string) => tasks.some(t => t.sourceKey === keyOf(id));
   const visible = areas.filter(a => reco[a]);
   const items = getRecommendations(client, period).filter(r => visible.includes(r.area));
   return <section className="reco-section">
@@ -24,7 +26,7 @@ export function Recommendations({ areas, title = 'Doporučení' }: { areas: Reco
         <p>{r.insight}</p>
         <p className="reco-action"><strong>Co udělat:</strong> {r.action}</p>
         <div className="reco-foot"><div><small>PŘEDAT</small><strong>{r.recipient}</strong><span className="reco-audience">{r.audience === 'Klient' ? 'Pro klienta' : 'Interní tým'} · {r.impact}</span></div>
-          <Button size="sm" variant={sent.includes(r.id) ? 'ghost' : 'outline'} disabled={sent.includes(r.id)} onClick={() => setSent([...sent, r.id])}>{sent.includes(r.id) ? <><Check />Předáno</> : <><Send />Předat</>}</Button></div>
+          <Button size="sm" variant={isSent(r.id) ? 'ghost' : 'outline'} disabled={isSent(r.id)} onClick={() => tasksStore.add({ sourceKey: keyOf(r.id), title: r.title, action: r.action, source: `${clients[client]} · ${recoAreas.find(a => a.id === r.area)?.name}`, recipient: r.recipient, impact: r.impact, priority: r.priority })}>{isSent(r.id) ? <><Check />Předáno</> : <><Send />Předat</>}</Button></div>
       </article>)}</div>}
     {areas.length === 1 && reco[areas[0]!] && <Button variant="ghost" size="sm" className="reco-hide" onClick={() => toggleReco(areas[0]!)}><EyeOff />Skrýt zde</Button>}
   </section>;
