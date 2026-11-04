@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import { Link, useRouterState } from '@tanstack/react-router';
-import { LayoutGrid, Users, Sprout, Globe2, Megaphone, FileChartColumn, Settings2, Search, Database, ListChecks, PanelLeftClose, PanelLeftOpen, ChevronDown, ArrowUpRight, Bell, Check, X, Menu, Command, CircleHelp } from 'lucide-react';
+import { LayoutGrid, Users, Sprout, Globe2, Megaphone, FileChartColumn, Settings2, Search, Database, ListChecks, Target, PanelLeftClose, PanelLeftOpen, ChevronDown, ArrowUpRight, Bell, Check, X, Menu, Command, CircleHelp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { clients, demoClients, clientConfig, type RecoArea } from '@/lib/analytics-data';
 type RecoState = Record<RecoArea, boolean>;
@@ -13,6 +13,7 @@ const navigation = [
   { to: '/organika', name: 'Organika & automatizace', icon: Sprout },
   { to: '/web', name: 'Výkon webu', icon: Globe2 },
   { to: '/kampane', name: 'Výkon kampaní', icon: Megaphone },
+  { to: '/cile', name: 'Cíle a rady', icon: Target },
   { to: '/search-console', name: 'Search Console', icon: Search },
   { to: '/ukoly', name: 'Úkoly týmu', icon: ListChecks },
   { to: '/reporty', name: 'Reporty', icon: FileChartColumn },

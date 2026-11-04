@@ -63,3 +63,18 @@ npm run build    # produkční build
 - [Původní designový záměr](docs/design-brief.md)
 
 Původně vytvořeno v [Lovable](https://lovable.dev), dál vyvíjeno v repozitáři.
+
+## Cíle a rady + most z Fachmana (zdarma, lokálně)
+
+**Cíle a rady** (`/cile`): zadáte obchodní cíl, marketingový cíl a čísla (KPI) s cílovou hodnotou a obdobím. Aplikace ukáže, jak daleko jste, a řekne, co udělat u konkrétní kampaně. Tlačítko **Předat** vytvoří úkol. Tlačítko **Zkopírovat pro Fachmana** vyrobí řádky `- KPI: ROAS ≥ 5 × · 30 dní · vše`, které vložíte do části „2. Cíle (KPI)“ souboru `ppc.md` klienta. **Načíst z ppc.md** je přečte zpět.
+
+**Skutečná čísla (most):**
+1. Jednorázově musí být nastavený Fachman (`~/AGENTURA/PPC`, složka `.venv`, soubor `.env`). To dělá Fachman sám, AVQIX `.env` nikdy nečte.
+2. Ve složce AVIX spusťte:
+   ```bash
+   python3 scripts/most_fachman.py <klient> --google 123-456-7890 --meta act_123456 --dny 30
+   ```
+   (stačí jen `--google` nebo jen `--meta`; období 7, 30 nebo 90). Skript spustí Fachmanovy čtecí skripty a uloží soubory do `data-most/` (složka je v `.gitignore`). Klienty pod NDA odmítne.
+3. V AVQIX: **Datové zdroje → Fachman → Vybrat soubory z data-most**. Data žijí jen v paměti prohlížeče a po obnovení stránky se smažou.
+
+Fachmana skript nijak nemění a nic nikam neposílá. Zatím se čtou kampaně z Google Ads a Meta Ads; e-mailing (ActiveCampaign aj.) zatím data nemá.

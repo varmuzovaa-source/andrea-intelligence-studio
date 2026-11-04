@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CileRouteImport } from './routes/cile'
 import { Route as DatoveZdrojeRouteImport } from './routes/datove-zdroje'
 import { Route as KampaneRouteImport } from './routes/kampane'
 import { Route as KlientiRouteImport } from './routes/klienti'
@@ -24,6 +25,11 @@ import { Route as WebRouteImport } from './routes/web'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CileRoute = CileRouteImport.update({
+  id: '/cile',
+  path: '/cile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DatoveZdrojeRoute = DatoveZdrojeRouteImport.update({
@@ -79,6 +85,7 @@ const WebRoute = WebRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cile': typeof CileRoute
   '/datove-zdroje': typeof DatoveZdrojeRoute
   '/kampane': typeof KampaneRoute
   '/klienti': typeof KlientiRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cile': typeof CileRoute
   '/datove-zdroje': typeof DatoveZdrojeRoute
   '/kampane': typeof KampaneRoute
   '/klienti': typeof KlientiRoute
@@ -106,6 +114,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cile': typeof CileRoute
   '/datove-zdroje': typeof DatoveZdrojeRoute
   '/kampane': typeof KampaneRoute
   '/klienti': typeof KlientiRoute
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/cile'
     | '/datove-zdroje'
     | '/kampane'
     | '/klienti'
@@ -134,6 +144,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/cile'
     | '/datove-zdroje'
     | '/kampane'
     | '/klienti'
@@ -147,6 +158,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/cile'
     | '/datove-zdroje'
     | '/kampane'
     | '/klienti'
@@ -161,6 +173,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CileRoute: typeof CileRoute
   DatoveZdrojeRoute: typeof DatoveZdrojeRoute
   KampaneRoute: typeof KampaneRoute
   KlientiRoute: typeof KlientiRoute
@@ -180,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cile': {
+      id: '/cile'
+      path: '/cile'
+      fullPath: '/cile'
+      preLoaderRoute: typeof CileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/datove-zdroje': {
@@ -257,6 +277,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CileRoute: CileRoute,
   DatoveZdrojeRoute: DatoveZdrojeRoute,
   KampaneRoute: KampaneRoute,
   KlientiRoute: KlientiRoute,
