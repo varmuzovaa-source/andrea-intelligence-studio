@@ -1,10 +1,10 @@
-# AVQIX · Marketing Intelligence
+# AVQIX Intelligence Studio
 
 **Z cílů klienta udělá konkrétní rady: u které kampaně co změnit, v jakém kanálu a komu to předat.**
 
 ![Přehled výkonu](docs/screenshot-prehled.png)
 
-📄 **[Postup pro začátečníky (PDF ke stažení)](docs/AVQIX-postup.pdf)** · 🌐 [Živé demo](https://andrea-intelligence-studio.vercel.app) (ukázková data)
+📄 **[Postup pro začátečníky (PDF ke stažení)](docs/AVQIX-postup.pdf)** · 🌐 [Živé demo](https://avqix-intelligence-studio.vercel.app) (ukázková data)
 
 ## K čemu to je
 

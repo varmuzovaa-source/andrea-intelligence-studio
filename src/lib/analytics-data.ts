@@ -62,7 +62,7 @@ export function downloadCsv(filename: string, headers: string[], rows: (string |
   const link = document.createElement('a'); link.href = url; link.download = filename; link.click(); URL.revokeObjectURL(url);
 }
 export function pageHead(title: string, description: string) {
-  return { meta: [{ title: `${title} — AVQIX` }, { name: 'description', content: description }, { property: 'og:title', content: `${title} — AVQIX` }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }] };
+  return { meta: [{ title: `${title} — AVQIX Intelligence Studio` }, { name: 'description', content: description }, { property: 'og:title', content: `${title} — AVQIX Intelligence Studio` }, { property: 'og:description', content: description }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }] };
 }
 
 export type RecoArea = 'keywords' | 'google' | 'meta' | 'crm';
