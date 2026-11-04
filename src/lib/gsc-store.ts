@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react';
-import type { GscDataset, GscDimension } from './search-console';
+import { buildRecommendations, findOpportunities, type GscDataset, type GscDimension, type GscRecommendation } from './search-console';
 
 /**
  * In-memory store for imported Search Console exports.
@@ -23,3 +23,15 @@ export const gscStore = {
 };
 
 export const useGscData = () => useSyncExternalStore(gscStore.subscribe, gscStore.get, gscStore.get);
+
+/** Recommendations from whatever is currently imported (queries first, then pages). */
+export function gscRecommendations(): GscRecommendation[] {
+  const out: GscRecommendation[] = [];
+  for (const dimension of ['query', 'page'] as const) {
+    const current = state.current[dimension];
+    if (!current) continue;
+    const previous = state.previous[dimension]?.rows ?? null;
+    out.push(...buildRecommendations(dimension, findOpportunities(current.rows, previous), previous !== null).filter(r => r.id !== 'nothing' && r.id !== 'no-previous'));
+  }
+  return out;
+}

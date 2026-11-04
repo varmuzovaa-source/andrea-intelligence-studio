@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ChevronDown, Link2, Plug, ShieldCheck, Sparkles } from 'lucide-react';
+import { ChevronDown, Lightbulb, Link2, Plug, ShieldCheck, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { PageHeader, SectionHeading } from './controls';
@@ -13,6 +13,11 @@ import { gscStore } from '@/lib/gsc-store';
 import { aiProviders, type AiProvider } from '@/lib/ai-summary';
 import { aiStore, useAiSettings } from '@/lib/ai-store';
 
+const nextSteps = [
+  { title: '1. Začněte Search Console', text: 'Je to jediný zdroj, který aplikace už umí vyhodnotit. Stáhněte export Dotazy a Stránky a nahrajte ho na stránce Search Console.' },
+  { title: '2. Přidejte předchozí období', text: 'Druhý export za stejně dlouhé minulé období odemkne hledání poklesů.' },
+  { title: '3. Ostatní zdroje zatím jen zkontrolujte', text: 'Meta Ads, Google Ads, GA4, YouTube a e-mailing zatím jen ověří sloupce. Vyplatí se zjistit, jestli váš export vychází, než se postaví napojení.' },
+];
 type Check = { fileName: string; check: ColumnCheck; preview: string[][]; rowCount: number; stored: boolean; errors: string[] };
 
 export function DataSourcesPage() {
@@ -20,6 +25,8 @@ export function DataSourcesPage() {
     <PageHeader title="Datové zdroje" description="Konektory jako zásuvné moduly. Zatím je žádný není připojený." />
     <div className="info-banner"><ShieldCheck size={18} /><span>Prototyp běží lokálně. Nic se nepřipojuje k externím účtům a žádná data se neodesílají. CSV soubory se čtou jen v prohlížeči.</span></div>
     <SectionHeading title="Konektory" subtitle={`${connectors.length} modulů · ${connectors.filter(c => c.status === 'connected').length} připojeno`} />
+    <section className="reco-section"><SectionHeading title="Co udělat dál" subtitle="Doporučený postup pro napojení dat" />
+      <div className="reco-grid">{nextSteps.map(r => <article key={r.title} className="reco-card"><h3><Lightbulb size={15} />{r.title}</h3><p>{r.text}</p></article>)}</div></section>
     <div className="connector-grid">{connectors.map(c => c.id === 'ai' ? <AiCard key={c.id} connector={c} /> : <ConnectorCard key={c.id} connector={c} />)}</div>
   </main>;
 }

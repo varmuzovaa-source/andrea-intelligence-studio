@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
-import { ArrowDownUp, Download, FlaskConical, Lightbulb, ShieldCheck, Trash2, TriangleAlert } from 'lucide-react';
+import { ArrowDownUp, Check, Download, FlaskConical, Lightbulb, Send, ShieldCheck, Trash2, TriangleAlert } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { PageHeader, SectionHeading } from './controls';
 import { CsvPicker } from './csv-picker';
 import { ColumnReport } from './column-report';
 import { downloadCsv, number } from '@/lib/analytics-data';
-import { buildRecommendations, findOpportunities, gscColumns, parseGscCsv, pct, pos, sumRows, type GscDimension, type GscRow, type Opportunity } from '@/lib/search-console';
+import { buildRecommendations, findOpportunities, gscColumns, gscRules, parseGscCsv, pct, pos, sumRows, type GscDimension, type GscRow, type Opportunity } from '@/lib/search-console';
 import { gscStore, useGscData, type GscPeriod } from '@/lib/gsc-store';
 import { sampleQueriesCurrent, sampleQueriesPrevious, samplePagesCurrent } from '@/lib/gsc-sample';
 import { buildAiPayload, aiProviders } from '@/lib/ai-summary';
@@ -67,12 +67,16 @@ export function SearchConsolePage() {
       {!entry.ok && entry.check && <ColumnReport spec={gscColumns} check={entry.check} />}
     </div>)}</div>}
 
-    {!current ? <div className="info-banner"><TriangleAlert size={18} /><span>Zatím nejsou nahraná žádná data. Nahrajte export, nebo si zkuste vymyšlená data výše.</span></div>
+    {!current ? <>
+      <div className="info-banner"><TriangleAlert size={18} /><span>Zatím nejsou nahraná žádná data. Nahrajte export, nebo si zkuste vymyšlená data výše.</span></div>
+      <section className="reco-section"><SectionHeading title="Co vám aplikace poradí" subtitle="Po nahrání dat uvidíte konkrétní příklady, komu je předat a jaký mají dopad" />
+        <div className="reco-grid">{gscRules.map(r => <article key={r.title} className="reco-card"><h3><Lightbulb size={15} />{r.title}</h3><p>{r.what}</p><p className="reco-action"><strong>Co udělat:</strong> {r.todo}</p></article>)}</div></section></>
       : <Analysis rows={current.rows} previousRows={previous?.rows ?? null} dimension={active!} available={available} setDimension={setDimension} minImpressions={minImpressions} setMinImpressions={setMinImpressions} />}
   </main>;
 }
 
 function Analysis({ rows, previousRows, dimension, available, setDimension, minImpressions, setMinImpressions }: { rows: GscRow[]; previousRows: GscRow[] | null; dimension: GscDimension; available: GscDimension[]; setDimension: (d: GscDimension) => void; minImpressions: number; setMinImpressions: (n: number) => void }) {
+  const [sent, setSent] = useState<string[]>([]);
   const total = useMemo(() => sumRows(rows), [rows]);
   const before = useMemo(() => (previousRows ? sumRows(previousRows) : null), [previousRows]);
   const opp = useMemo(() => findOpportunities(rows, previousRows, { minImpressions }), [rows, previousRows, minImpressions]);
@@ -96,6 +100,8 @@ function Analysis({ rows, previousRows, dimension, available, setDimension, minI
         <p>{r.insight}</p>
         <p className="reco-action"><strong>Co udělat:</strong> {r.action}</p>
         {r.examples.length > 0 && <p className="gsc-examples"><small>PŘÍKLADY</small>{r.examples.map(e => <code key={e}>{e}</code>)}</p>}
+        <div className="reco-foot"><div><small>PŘEDAT</small><strong>{r.recipient}</strong><span className="reco-audience">{r.audience === 'Klient' ? 'Pro klienta' : 'Interní tým'} · {r.impact}</span></div>
+          <Button size="sm" variant={sent.includes(r.id) ? 'ghost' : 'outline'} disabled={sent.includes(r.id)} onClick={() => setSent([...sent, r.id])}>{sent.includes(r.id) ? <><Check />Předáno</> : <><Send />Předat</>}</Button></div>
       </article>)}</div>
     </section>
 
