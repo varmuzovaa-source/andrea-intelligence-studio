@@ -11,11 +11,11 @@ th{background:#f3f3ef;font-weight:600}.tag{display:inline-block;padding:.5mm 2mm
 code{background:#eee;padding:.4mm 1.5mm;border-radius:1mm;font-size:9.5pt}pre{background:#1c1c1c;color:#eaffc2;padding:3mm 4mm;border-radius:2mm;font-size:9pt;white-space:pre-wrap;word-break:break-all}
 img{width:100%;border:1px solid #ddd;border-radius:2mm;margin-top:3mm}.break{page-break-before:always}
 </style></head><body>
-<h1>AVQIX<span>.</span></h1><div class="sub">Marketing Intelligence · přehled aplikace · stav k 4. 11. 2026</div>
+<h1>AVQIX<span>.</span></h1><div class="sub">Marketing Intelligence · přehled aplikace · stav k 4. 11. 2026 · <a href="AVQIX-postup.pdf">postup krok za krokem</a></div>
 
 <h2>Co aplikace dělá</h2>
-<p>AVQIX je přehledový nástroj pro marketingové řízení. Na jednom místě ukazuje, jak si vedou reklamy, web, organika a e-maily u jednotlivých klientů, a převádí čísla do srozumitelných doporučení: co zlepšit, komu to předat a jaký může být přínos.</p>
-<div class="box"><strong>Důležité o aktuálním stavu:</strong> je to funkční prototyp. Přehledy běží na vymyšlených demo datech a žádný externí účet zatím není připojený. Jedinou skutečnou cestou pro vlastní data je dnes import CSV ze Search Console.</div>
+<p>AVQIX je přehledový nástroj pro marketingové řízení. Na jednom místě ukazuje, jak si vedou reklamy, web, organika a e-maily u jednotlivých klientů, a převádí čísla do srozumitelných doporučení: co zlepšit, komu to předat a jaký může být přínos. Hlavní novinka: z <strong>cílů klienta</strong> vyrobí rady, u které kampaně v jakém kanálu co udělat.</p>
+<div class="box"><strong>Důležité o aktuálním stavu:</strong> ukázkoví klienti a jejich přehledy běží na vymyšlených demo datech. Vlastní klient začíná prázdný. Skutečná čísla kampaní z Google Ads a Meta Ads se stahují zdarma a lokálně přes Fachmana (jen čtení účtů) a ze Search Console přes CSV. Čísla nejsou živá, jsou z okamžiku posledního stažení.</div>
 <img src="screenshot-prehled.png" alt="Přehled výkonu">
 
 <h2>Pro koho je</h2>
@@ -27,6 +27,10 @@ img{width:100%;border:1px solid #ddd;border-radius:2mm;margin-top:3mm}.break{pag
 
 <h2>Funkce</h2>
 <table><tr><th>Oblast</th><th>Co umí</th><th>Stav</th></tr>
+<tr><td><strong>Cíle a rady</strong></td><td>Obchodní cíl, marketingový cíl a čísla (KPI) s cílovou hodnotou, obdobím a kanálem. Porovnání skutečnost × cíl po kanálech a kampaních. Pravidlové rady „u kampaně X udělej Y, protože KPI Z je pod cílem“ s prioritou, jistotou a komu předat. Tlačítko <strong>Předat</strong> vytvoří úkol. Cíle jdou přenést do <code>ppc.md</code> Fachmana a zpět.</td><td><span class="tag ok">pracuje s vašimi daty</span></td></tr>
+<tr><td><strong>Vlastní klienti</strong></td><td>Přidání klienta (název, typ podnikání). Klient začíná prázdný, bez vymyšlených čísel. Ukládá se jen v prohlížeči.</td><td><span class="tag ok">funguje</span></td></tr>
+<tr><td><strong>Fachman (lokální most)</strong></td><td>Tlačítko <strong>Aktualizovat z Fachmana</strong> stáhne kampaně z Google Ads a Meta Ads (jen čtení) a načte je. Funguje jen při lokálním spuštění, na veřejném webu je vypnuté.</td><td><span class="tag ok">zdarma, lokálně</span></td></tr>
+<tr><td><strong>Úkoly týmu</strong></td><td>Úkoly vzniklé tlačítkem Předat: kdo je řeší, stav, export CSV. Ukládají se jen v prohlížeči.</td><td><span class="tag ok">funguje</span></td></tr>
 <tr><td>Přehled</td><td>Tržby, náklady, ROAS, PNO, MER, průměrná objednávka a vracející se zákazníci, vždy proti předchozímu období.</td><td><span class="tag no">demo data</span></td></tr>
 <tr><td>Klienti a obchodní modely</td><td>Čtyři ukázkoví klienti. Wording, KPI i doporučení se mění podle modelu.</td><td><span class="tag no">demo data</span></td></tr>
 <tr><td>Kampaně, web, organika</td><td>Tabulky s hledáním, řazením, filtry, výběrem sloupců a exportem CSV, grafy a náhledy kreativ.</td><td><span class="tag no">demo data</span></td></tr>
@@ -36,23 +40,24 @@ img{width:100%;border:1px solid #ddd;border-radius:2mm;margin-top:3mm}.break{pag
 <tr><td><strong>AI (Claude, GPT)</strong></td><td>Volitelné a vypnuté. Po zapnutí ukáže náhled souhrnných čísel, která by se poslala (žádné dotazy, adresy ani jména klientů).</td><td><span class="tag no">jen náhled, nic se neodesílá</span></td></tr></table>
 
 <h2 class="break">Napojení na zdroje dat</h2>
-<p>Všechny konektory jsou dnes <strong>Nepřipojeno</strong>. Tabulka ukazuje, co funguje už teď a co je potřeba pro skutečné napojení.</p>
+<p>Přímé připojení účtů v appce zatím neexistuje. Google Ads a Meta Ads se čtou přes Fachmana na vašem počítači, ostatní zdroje přes CSV. Tabulka ukazuje, co funguje už teď a co je potřeba pro skutečné napojení.</p>
 <table><tr><th>Zdroj</th><th>Co funguje dnes</th><th>Pro skutečné napojení bude potřeba</th></tr>
 <tr><td>Google Search Console</td><td>Import CSV, analýza příležitostí a doporučení</td><td>Přihlášení Google účtem s přístupem k webu</td></tr>
-<tr><td>Meta Ads</td><td>Kontrola sloupců a náhled CSV (data se zatím nepoužívají)</td><td>Přístup k reklamnímu účtu (Meta Marketing API)</td></tr>
-<tr><td>Google Ads</td><td>Kontrola sloupců a náhled CSV</td><td>Přístup k účtu a developer token</td></tr>
+<tr><td>Meta Ads</td><td><strong>Kampaně přes Fachmana</strong> (tlačítko nebo soubory z <code>data-most</code>), využité v Cílech a radách</td><td>Pro živé napojení bez Fachmana: Meta Marketing API a přihlášení do appky</td></tr>
+<tr><td>Google Ads</td><td><strong>Kampaně přes Fachmana</strong> (tlačítko nebo soubory z <code>data-most</code>), využité v Cílech a radách</td><td>Pro živé napojení bez Fachmana: developer token a přihlášení do appky</td></tr>
 <tr><td>Google Analytics 4</td><td>Kontrola sloupců a náhled CSV</td><td>Přístup k vlastnosti GA4</td></tr>
 <tr><td>YouTube</td><td>Kontrola sloupců a náhled CSV</td><td>Přístup ke kanálu (YouTube Analytics API)</td></tr>
 <tr><td>E-mailing</td><td>Kontrola sloupců a náhled CSV</td><td>API klíč použitého nástroje</td></tr>
 <tr><td>AI (Claude, GPT)</td><td>Vypínač a náhled dat k odeslání</td><td>Vlastní API klíč, uložený mimo prohlížeč</td></tr></table>
 <h3>Zásady soukromí</h3>
-<ul><li>CSV soubory se čtou jen ve vašem prohlížeči a nikam se neodesílají. Data jsou v paměti a po obnovení stránky zmizí.</li>
+<ul><li>CSV a soubory z Fachmana se čtou jen ve vašem prohlížeči a nikam se neodesílají. Čísla kampaní jsou v paměti a po obnovení stránky zmizí. Cíle, klienti a úkoly zůstávají jen v prohlížeči, kde je zadáte.</li>
+<li>Přístupy do reklamních účtů zůstávají u Fachmana na vašem počítači, AVQIX je nečte.</li>
 <li>AI je ve výchozím stavu vypnutá a i po zapnutí by dostala jen souhrnná čísla.</li>
 <li>Veřejné demo na Vercelu obsahuje jen vymyšlená data. Před nasazením skutečných dat se produkční adresa zamkne.</li></ul>
 
 <h2>Jak to spustit (jeden příkaz)</h2>
 <p>Potřebujete jen nainstalovaný <a href="https://nodejs.org">Node.js</a>. Vše ostatní se stáhne samo.</p>
 <pre>gh repo clone varmuzovaa-source/andrea-intelligence-studio &amp;&amp; cd andrea-intelligence-studio &amp;&amp; ./start.sh</pre>
-<p>Kód už máte stažený? Stačí <code>./start.sh</code>. Aplikace se otevře na <code>http://localhost:5173</code>. Na stránce Search Console klikněte na „Vyzkoušet na vymyšlených datech“.</p>
-<p>Živé demo: <code>andrea-intelligence-studio.vercel.app</code> · Kód: <code>github.com/varmuzovaa-source/andrea-intelligence-studio</code> (soukromé)</p>
+<p>Kód už máte stažený? Na Macu stačí dvakrát kliknout na <code>Spustit-AVQIX.command</code>, nebo v Terminálu spustit <code>./start.sh</code>. Aplikace se otevře na <code>http://localhost:5173</code>. Pak přidejte klienta, zadejte cíle a na stránce Cíle a rady stáhněte čísla. Podrobně v <a href="AVQIX-postup.pdf">postupu krok za krokem</a>.</p>
+<p>Živé demo: <code>andrea-intelligence-studio.vercel.app</code> · Kód: <code>github.com/varmuzovaa-source/andrea-intelligence-studio</code></p>
 </body></html>
