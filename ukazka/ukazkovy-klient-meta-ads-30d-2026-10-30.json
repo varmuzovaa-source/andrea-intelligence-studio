@@ -1,0 +1,56 @@
+[
+ {
+  "campaign_name": "Prospecting · Video",
+  "spend": "21000",
+  "clicks": "2600",
+  "impressions": "310000",
+  "actions": [
+   {
+    "action_type": "purchase",
+    "value": "20"
+   }
+  ],
+  "action_values": [
+   {
+    "action_type": "purchase",
+    "value": "9000"
+   }
+  ]
+ },
+ {
+  "campaign_name": "Remarketing · 30 dní",
+  "spend": "8000",
+  "clicks": "1500",
+  "impressions": "70000",
+  "actions": [
+   {
+    "action_type": "purchase",
+    "value": "55"
+   }
+  ],
+  "action_values": [
+   {
+    "action_type": "purchase",
+    "value": "52000"
+   }
+  ]
+ },
+ {
+  "campaign_name": "Bestsellery · Advantage+",
+  "spend": "15000",
+  "clicks": "2200",
+  "impressions": "160000",
+  "actions": [
+   {
+    "action_type": "purchase",
+    "value": "60"
+   }
+  ],
+  "action_values": [
+   {
+    "action_type": "purchase",
+    "value": "40000"
+   }
+  ]
+ }
+]

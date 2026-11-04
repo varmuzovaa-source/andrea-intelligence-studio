@@ -35,3 +35,6 @@ dist-ssr
 .vercel
 .output
 .wrangler
+
+# Data klientů z Fachmana (lokální most), nikdy do gitu
+data-most/

@@ -97,3 +97,25 @@ button { box-shadow:none!important; } a { text-decoration:none; } select { curso
 .task-status {display:flex;gap:6px;flex-wrap:wrap;}
 .task-status button {height:28px;font-size:10px;}
 @media(max-width:900px) { .task-board {grid-template-columns:1fr;} }
+/* Cíle a rady */
+.goal-form {display:grid;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;}
+.goal-form label {display:grid;gap:6px;font-size:11px;color:var(--muted-foreground);}
+.goal-form input,.goal-form select,.goal-form textarea {border:1px solid var(--border);border-radius:var(--radius-md);background:var(--card);padding:8px 10px;font-size:12px;color:var(--foreground);font-family:inherit;}
+.goal-text-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.goal-kpi-row {display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) auto;gap:10px;align-items:end;}
+.goal-help {font-size:10px;color:var(--muted-foreground);margin:0;}
+.goal-progress-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.goal-card {background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;display:grid;gap:8px;}
+.goal-card h3 {font-size:12px;margin:0;}
+.goal-values {display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted-foreground);}
+.goal-values strong {font-size:18px;color:var(--foreground);}
+.goal-bar {height:8px;border-radius:99px;background:var(--secondary);overflow:hidden;}
+.goal-bar i {display:block;height:100%;border-radius:99px;background:var(--primary);}
+.goal-card.met .goal-bar i {background:var(--positive);}
+.goal-card.below .goal-bar i {background:var(--destructive);}
+.goal-verdict {font-size:10px;font-weight:700;}
+.goal-card.met .goal-verdict {color:var(--positive);}
+.goal-card.below .goal-verdict {color:var(--destructive);}
+.goal-channels {display:flex;flex-wrap:wrap;gap:10px;font-size:10px;color:var(--muted-foreground);}
+.goal-why {font-size:11px;color:var(--muted-foreground);margin:0 0 8px;}
+@media(max-width:900px) { .goal-text-grid,.goal-progress-grid {grid-template-columns:1fr;} .goal-kpi-row {grid-template-columns:1fr 1fr;} }

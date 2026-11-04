@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CileRouteImport } from './routes/cile'
 import { Route as DatoveZdrojeRouteImport } from './routes/datove-zdroje'
 import { Route as KampaneRouteImport } from './routes/kampane'
 import { Route as KlientiRouteImport } from './routes/klienti'
@@ -20,10 +21,16 @@ import { Route as ReportyRouteImport } from './routes/reporty'
 import { Route as SearchConsoleRouteImport } from './routes/search-console'
 import { Route as UkolyRouteImport } from './routes/ukoly'
 import { Route as WebRouteImport } from './routes/web'
+import { Route as ApiMostRouteImport } from './routes/api.most'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CileRoute = CileRouteImport.update({
+  id: '/cile',
+  path: '/cile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DatoveZdrojeRoute = DatoveZdrojeRouteImport.update({
@@ -76,9 +83,15 @@ const WebRoute = WebRouteImport.update({
   path: '/web',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMostRoute = ApiMostRouteImport.update({
+  id: '/api/most',
+  path: '/api/most',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cile': typeof CileRoute
   '/datove-zdroje': typeof DatoveZdrojeRoute
   '/kampane': typeof KampaneRoute
   '/klienti': typeof KlientiRoute
@@ -89,9 +102,11 @@ export interface FileRoutesByFullPath {
   '/search-console': typeof SearchConsoleRoute
   '/ukoly': typeof UkolyRoute
   '/web': typeof WebRoute
+  '/api/most': typeof ApiMostRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cile': typeof CileRoute
   '/datove-zdroje': typeof DatoveZdrojeRoute
   '/kampane': typeof KampaneRoute
   '/klienti': typeof KlientiRoute
@@ -102,10 +117,12 @@ export interface FileRoutesByTo {
   '/search-console': typeof SearchConsoleRoute
   '/ukoly': typeof UkolyRoute
   '/web': typeof WebRoute
+  '/api/most': typeof ApiMostRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cile': typeof CileRoute
   '/datove-zdroje': typeof DatoveZdrojeRoute
   '/kampane': typeof KampaneRoute
   '/klienti': typeof KlientiRoute
@@ -116,11 +133,13 @@ export interface FileRoutesById {
   '/search-console': typeof SearchConsoleRoute
   '/ukoly': typeof UkolyRoute
   '/web': typeof WebRoute
+  '/api/most': typeof ApiMostRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/cile'
     | '/datove-zdroje'
     | '/kampane'
     | '/klienti'
@@ -131,9 +150,11 @@ export interface FileRouteTypes {
     | '/search-console'
     | '/ukoly'
     | '/web'
+    | '/api/most'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/cile'
     | '/datove-zdroje'
     | '/kampane'
     | '/klienti'
@@ -144,9 +165,11 @@ export interface FileRouteTypes {
     | '/search-console'
     | '/ukoly'
     | '/web'
+    | '/api/most'
   id:
     | '__root__'
     | '/'
+    | '/cile'
     | '/datove-zdroje'
     | '/kampane'
     | '/klienti'
@@ -157,10 +180,12 @@ export interface FileRouteTypes {
     | '/search-console'
     | '/ukoly'
     | '/web'
+    | '/api/most'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CileRoute: typeof CileRoute
   DatoveZdrojeRoute: typeof DatoveZdrojeRoute
   KampaneRoute: typeof KampaneRoute
   KlientiRoute: typeof KlientiRoute
@@ -171,6 +196,7 @@ export interface RootRouteChildren {
   SearchConsoleRoute: typeof SearchConsoleRoute
   UkolyRoute: typeof UkolyRoute
   WebRoute: typeof WebRoute
+  ApiMostRoute: typeof ApiMostRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -180,6 +206,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cile': {
+      id: '/cile'
+      path: '/cile'
+      fullPath: '/cile'
+      preLoaderRoute: typeof CileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/datove-zdroje': {
@@ -252,11 +285,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WebRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/most': {
+      id: '/api/most'
+      path: '/api/most'
+      fullPath: '/api/most'
+      preLoaderRoute: typeof ApiMostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CileRoute: CileRoute,
   DatoveZdrojeRoute: DatoveZdrojeRoute,
   KampaneRoute: KampaneRoute,
   KlientiRoute: KlientiRoute,
@@ -267,6 +308,7 @@ const rootRouteChildren: RootRouteChildren = {
   SearchConsoleRoute: SearchConsoleRoute,
   UkolyRoute: UkolyRoute,
   WebRoute: WebRoute,
+  ApiMostRoute: ApiMostRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

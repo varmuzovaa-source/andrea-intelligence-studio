@@ -12,6 +12,10 @@ import { parseGscCsv } from '@/lib/search-console';
 import { gscStore } from '@/lib/gsc-store';
 import { aiProviders, type AiProvider } from '@/lib/ai-summary';
 import { aiStore, useAiSettings } from '@/lib/ai-store';
+import { bridgeSourceLabel, bridgeStore, useBridge } from '@/lib/campaign-data';
+import { parseFachmanJson } from '@/lib/fachman-bridge';
+import { clients } from '@/lib/analytics-data';
+import { useWorkspace } from './workspace';
 
 const nextSteps = [
   { title: '1. Začněte Search Console', text: 'Je to jediný zdroj, který aplikace už umí vyhodnotit. Stáhněte export Dotazy a Stránky a nahrajte ho na stránce Search Console.' },
@@ -27,7 +31,7 @@ export function DataSourcesPage() {
     <SectionHeading title="Konektory" subtitle={`${connectors.length} modulů · ${connectors.filter(c => c.status === 'connected').length} připojeno`} />
     <section className="reco-section"><SectionHeading title="Co udělat dál" subtitle="Doporučený postup pro napojení dat" />
       <div className="reco-grid">{nextSteps.map(r => <article key={r.title} className="reco-card"><h3><Lightbulb size={15} />{r.title}</h3><p>{r.text}</p></article>)}</div></section>
-    <div className="connector-grid">{connectors.map(c => c.id === 'ai' ? <AiCard key={c.id} connector={c} /> : <ConnectorCard key={c.id} connector={c} />)}</div>
+    <div className="connector-grid"><FachmanCard />{connectors.map(c => c.id === 'ai' ? <AiCard key={c.id} connector={c} /> : <ConnectorCard key={c.id} connector={c} />)}</div>
   </main>;
 }
 
@@ -87,5 +91,33 @@ function AiCard({ connector }: { connector: Connector }) {
     <label className="ai-provider">Poskytovatel
       <select value={ai.provider} disabled={!ai.enabled} onChange={e => aiStore.update({ provider: e.target.value as AiProvider })}>{aiProviders.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}</select></label>
     <p className="gsc-note">Pokud AI zapnete, bude se posílat jen souhrnná čísla (součty kliknutí, zobrazení, CTR, počty příležitostí). Žádné dotazy, adresy ani názvy klientů. V prototypu se nic neodesílá, uvidíte jen náhled na stránce Search Console.</p>
+  </article>;
+}
+
+function FachmanCard() {
+  const { client } = useWorkspace();
+  const bridge = useBridge();
+  const [target, setTarget] = useState<number | null>(null);
+  const [msgs, setMsgs] = useState<{ ok: boolean; text: string }[]>([]);
+  const name = clients[target ?? client] ?? clients[0] ?? "";
+  const loaded = bridge[name] ?? [];
+  const handle = (text: string, fileName: string) => {
+    const r = parseFachmanJson(text, fileName);
+    if (!r.ok) { setMsgs(m => [...m, ...r.errors.map(e => ({ ok: false, text: `${fileName}: ${e}` }))]); return; }
+    bridgeStore.set(name, r.dataset);
+    setMsgs(m => [...m, { ok: true, text: `${fileName}: načteno ${r.dataset.campaigns.length} kampaní (${bridgeSourceLabel[r.dataset.source]}${r.dataset.days ? `, ${r.dataset.days} dní` : ''}).` }, ...r.dataset.notes.map(n => ({ ok: true, text: n }))]);
+  };
+  return <article className="connector-card">
+    <div className="connector-head"><span className="integration-symbol">F</span><div><strong>Fachman (PPC) · lokální most</strong><p>Skutečné kampaně z Google Ads a Meta Ads, zdarma, bez serveru a bez cloudu.</p></div><span className="integration-state"><Link2 size={14} />{loaded.length ? 'Načteno' : 'Nenačteno'}</span></div>
+    <p className="connector-note"><Plug size={13} />Fachman data jen přečte a uloží do složky data-most. Tady je z ní vyberete. Nic se neodesílá a po obnovení stránky se data z paměti smažou.</p>
+    <label className="ai-provider">Pro klienta
+      <select value={target ?? client} onChange={e => setTarget(Number(e.target.value))}>{clients.map((c, i) => <option key={c} value={i}>{c}</option>)}</select></label>
+    <div className="connector-actions">
+      <CsvPicker label="Vybrat soubory z data-most" multiple accept=".json,application/json" onText={handle} />
+      {loaded.length > 0 && <Button size="sm" variant="ghost" onClick={() => { bridgeStore.clear(name); setMsgs([]); }}>Zapomenout data</Button>}
+    </div>
+    {loaded.map(d => <p key={d.source} className="gsc-note">{bridgeSourceLabel[d.source]}: {d.campaigns.length} kampaní · {d.fileName}</p>)}
+    {msgs.map((m, i) => <p key={i} className={`gsc-note ${m.ok ? '' : 'import-status error'}`}>{m.text}</p>)}
+    {loaded.length > 0 && <p className="gsc-note">Hotovo. <Link to="/cile" className="gsc-link">Otevřít Cíle a rady</Link></p>}
   </article>;
 }
