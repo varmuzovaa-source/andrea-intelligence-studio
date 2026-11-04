@@ -1,0 +1,84 @@
+<!doctype html><html lang="cs"><head><meta charset="utf-8"><title>AVQIX · postup krok za krokem</title>
+<style>
+@page{size:A4;margin:12mm 13mm}
+*{box-sizing:border-box}
+body{font-family:-apple-system,"Helvetica Neue",Arial,sans-serif;color:#1c1c1c;font-size:10pt;line-height:1.45;margin:0}
+h1{font-size:25pt;margin:0}h1 span{color:#8ac926}.sub{color:#666;margin:1mm 0 5mm}
+h2{font-size:13pt;margin:0 0 3mm;padding-bottom:1.5mm;border-bottom:2px solid #b6f23a}
+.flow{display:flex;align-items:stretch;gap:2mm;margin:3mm 0 5mm}
+.node{flex:1;border:1.5px solid #1c1c1c;border-radius:3mm;padding:3mm;background:#fff;text-align:center}
+.node b{display:block;font-size:10.5pt;margin-bottom:1mm}.node small{color:#555;font-size:8pt}
+.node.hl{background:#e4f7b8}.arrow{align-self:center;font-size:16pt;color:#8ac926;font-weight:700}
+.steps{counter-reset:s}.step{display:flex;gap:3.5mm;margin-bottom:3mm;page-break-inside:avoid}
+.num{flex:none;width:9mm;height:9mm;border-radius:50%;background:#b6f23a;font-weight:800;font-size:12pt;display:flex;align-items:center;justify-content:center}
+.step h3{margin:0 0 .5mm;font-size:10.5pt}.step p{margin:0 0 1mm}
+.where{display:inline-block;background:#1c1c1c;color:#eaffc2;border-radius:1.5mm;padding:.3mm 2mm;font-size:8.5pt;font-weight:600}
+pre{background:#1c1c1c;color:#eaffc2;padding:2.5mm 3.5mm;border-radius:2mm;font-size:8.5pt;white-space:pre-wrap;word-break:break-all;margin:1mm 0}
+code{background:#eee;padding:.3mm 1.3mm;border-radius:1mm;font-size:9pt}
+table{width:100%;border-collapse:collapse;font-size:9pt;margin:2mm 0}th,td{text-align:left;padding:1.8mm 2.2mm;border-bottom:1px solid #ddd;vertical-align:top}th{background:#f3f3ef}
+.box{background:#f6f6f1;border-left:3px solid #b6f23a;padding:2.5mm 3.5mm;margin:3mm 0;page-break-inside:avoid}
+.warn{border-left-color:#e5484d}
+.pill{display:inline-block;border-radius:2mm;padding:.3mm 2mm;font-size:8.5pt;font-weight:700}
+.g{background:#c9f08a}.y{background:#ffe9a8}.r{background:#ffc9c9}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:4mm}
+.break{page-break-before:always}
+</style></head><body>
+
+<h1>AVQIX<span>.</span> jak na to</h1>
+<div class="sub">Postup pro úplné začátečníky · z cílů klienta rady, co udělat u konkrétní kampaně</div>
+
+<h2>Jak to celé funguje (jeden obrázek)</h2>
+<div class="flow">
+ <div class="node"><b>1. Zadáš cíl</b><small>co chce klient dosáhnout<br>(např. ROAS 5, cena za objednávku 250 Kč)</small></div><div class="arrow">→</div>
+ <div class="node"><b>2. Fachman stáhne čísla</b><small>z Google Ads a Meta<br>(jen čte, nic nemění)</small></div><div class="arrow">→</div>
+ <div class="node hl"><b>3. AVQIX porovná</b><small>skutečnost × cíl<br>a poradí u které kampaně co</small></div><div class="arrow">→</div>
+ <div class="node"><b>4. Předáš úkol</b><small>tlačítko Předat<br>→ stránka Úkoly týmu</small></div>
+</div>
+<div class="box"><b>Co kde je:</b> Fachman je tvůj PPC asistent ve složce <code>~/AGENTURA/PPC</code> (umí účty číst a analyzovat). AVQIX je přehledová appka ve složce <code>~/AGENTURA/AVIX</code> (cíle, porovnání, rady, úkoly). Mezi nimi je složka <code>data-most</code>, kam se čísla uloží a odkud je AVQIX načte. Vše zůstává na tvém počítači, nic se neposílá na internet.</div>
+
+<h2>Co zadáváš a kam</h2>
+<table>
+<tr><th>Co</th><th>Kam</th><th>Příklad</th></tr>
+<tr><td>Nový klient</td><td><span class="where">Klienti → Přidat klienta</span></td><td>Název „Ordinace Dr. Nováková“, typ „Služby“</td></tr>
+<tr><td>Obchodní cíl (co chce firma)</td><td><span class="where">Cíle a rady → Cíle klienta</span></td><td>Zaplnit volné termíny na příští měsíc</td></tr>
+<tr><td>Marketingový cíl (co má dělat marketing)</td><td><span class="where">Cíle a rady → Cíle klienta</span></td><td>Víc objednaných konzultací za rozumnou cenu</td></tr>
+<tr><td>Číslo (KPI): co měřit, cílová hodnota, období, kanál</td><td><span class="where">Cíle a rady → Přidat číslo (KPI)</span></td><td>Cena za objednanou konzultaci ≤ 250 Kč · měsíc · Všechny kanály</td></tr>
+<tr><td>ID reklamních účtů</td><td><span class="where">Terminál (příkaz v kroku 5)</span></td><td>Google Ads: 123-456-7890 · Meta: act_123456</td></tr>
+<tr><td>Kdo úkol řeší, jak je daleko</td><td><span class="where">Úkoly týmu</span></td><td>Řeší: Eva · stav Rozděláno</td></tr>
+</table>
+
+<div class="break"></div>
+<h2>Postup krok za krokem</h2>
+<div class="steps">
+<div class="step"><div class="num">1</div><div><h3>Spusť appku</h3><p>V terminálu (ve složce AVIX):</p><pre>cd ~/AGENTURA/AVIX
+npm run dev</pre><p>Otevři v prohlížeči <code>http://localhost:8080</code>. Nechej terminál běžet, dokud appku používáš.</p></div></div>
+<div class="step"><div class="num">2</div><div><h3>Přidej klienta</h3><p><span class="where">Klienti</span> → vyplň název a typ → <b>Přidat klienta</b>. Otevře se rovnou stránka Cíle a rady. Klient začíná prázdný, žádná vymyšlená čísla.</p></div></div>
+<div class="step"><div class="num">3</div><div><h3>Zadej cíle</h3><p><span class="where">Cíle a rady</span> → napiš obchodní a marketingový cíl → <b>Přidat číslo (KPI)</b> → vyber, co měřit (u každého je vysvětlení), cílovou hodnotu, období a kanál → <b>Uložit cíle</b>.</p><p>Chceš, aby je znal i Fachman? <b>Zkopírovat pro Fachmana</b> a vlož do části „2. Cíle (KPI)“ souboru <code>ppc.md</code> klienta.</p></div></div>
+<div class="step"><div class="num">4</div><div><h3>Připrav ID účtů</h3><p>Google Ads: ID klienta (10 číslic, např. 123-456-7890). Meta: ID reklamního účtu (<code>act_…</code>). Stačí jedno z nich.</p></div></div>
+<div class="step"><div class="num">5</div><div><h3>Stáhni čísla přes Fachmana</h3><p>V novém okně terminálu (ve složce AVIX; <code>klient</code> = jméno složky, které ukazuje stránka Cíle a rady):</p><pre>python3 scripts/most_fachman.py klient --google 123-456-7890 --meta act_123456 --dny 30</pre><p>Skript jen čte a uloží soubory do složky <code>data-most</code>. Období: 7, 30 nebo 90 dní. <b>Použij stejné období, jaké máš u cílů.</b></p></div></div>
+<div class="step"><div class="num">6</div><div><h3>Nahraj soubory do AVQIX</h3><p><span class="where">Datové zdroje</span> → karta <b>Fachman (PPC)</b> → vyber klienta → <b>Vybrat soubory z data-most</b> → označ oba soubory.</p></div></div>
+<div class="step"><div class="num">7</div><div><h3>Čti výsledek a předávej úkoly</h3><p><span class="where">Cíle a rady</span> → nahoře „Jak daleko jsme“, dole „Co udělat“. U rady, kterou chceš řešit, klikni <b>Předat</b>. Úkol najdeš v <span class="where">Úkoly týmu</span>, tam doplníš, kdo ho řeší, a posouváš stav. <b>Export CSV</b> pošleš kolegům.</p></div></div>
+</div>
+<div class="box"><b>Chceš si to jen vyzkoušet bez klienta?</b> Ve složce <code>ukazka</code> jsou vymyšlená data. Přidej si zkušebního klienta a v kroku 6 nahraj oba soubory z té složky. Kroky 4 a 5 přeskoč.</div>
+
+<div class="break"></div>
+<h2>Jak číst výsledek</h2>
+<div class="two">
+<div><h3 style="margin:0 0 1mm">Pruh „Jak daleko jsme“</h3>
+<p><span class="pill g">Splněno</span> cíl je splněn<br><span class="pill y">Skoro</span> chybí do 10 %<br><span class="pill r">Pod cílem</span> je co řešit<br><span class="pill" style="background:#eee">Chybí data</span> nejsou čísla nebo jiné období</p></div>
+<div><h3 style="margin:0 0 1mm">Karta rady</h3>
+<p><b>Priorita</b> Vysoká / Střední / Nízká = co řešit první.<br><b>Jistota</b> kolik dat za radou je. Při „nízké“ dělej jen malé změny.<br><b>Proč</b> číslo, ze kterého rada vychází.<br><b>Předat</b> komu to patří (PPC, grafik, klient…).</p></div>
+</div>
+<div class="box"><b>Příklad rady:</b> „U kampaně <i>Prospecting · Video</i> snížit rozpočet a prověřit ji. Proč: ROAS je 0,43×, cíl je 5×, tedy 9 % cíle; kampaň tvoří 31 % nákladů. Co udělat: snížit denní rozpočet o 20 % a prověřit cílení a kreativy; nezlepší-li se to do 14 dní, pozastavit.“</div>
+
+<h2>Když něco nejde</h2>
+<table>
+<tr><th>Co vidíš</th><th>Co s tím</th></tr>
+<tr><td>„Chybí data“ u cíle</td><td>Nahraj soubory z data-most (krok 6), nebo u Search Console cíle nahraj export.</td></tr>
+<tr><td>„Jiné období“</td><td>Cíl je třeba na 30 dní a soubory jsou za 7. Stáhni znovu se stejným <code>--dny</code>.</td></tr>
+<tr><td>Skript napíše, že nenašel Fachmana</td><td>Fachman nemá nastavené prostředí (složka <code>.venv</code> v <code>~/AGENTURA/PPC</code>). Řekni to Claude Code ve složce PPC.</td></tr>
+<tr><td>Po obnovení stránky zmizela čísla z kampaní</td><td>Je to záměr (čísla se neukládají). Nahraj soubory znovu. Cíle, klienti a úkoly zůstávají.</td></tr>
+<tr><td>Mám klienta v jiném prohlížeči a není tam</td><td>Cíle, klienti a úkoly se ukládají jen v tom prohlížeči, kde je zadáš. Používej stále stejný.</td></tr>
+</table>
+<div class="box warn"><b>Co appka zatím neumí:</b> pro skutečné klienty nemá přehledy a grafy (jen Cíle a rady, Úkoly, Search Console, Datové zdroje); e-mailing nemá žádná skutečná data; nic automaticky nemění v reklamních účtech, rady jen navrhují, co udělat ručně nebo přes Fachmana po tvém schválení.</div>
+</body></html>

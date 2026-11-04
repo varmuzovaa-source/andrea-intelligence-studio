@@ -6,25 +6,13 @@ Použití (ze složky AVIX):
 
 Jen standardní knihovna Pythonu. Fachmana nijak nemění: spustí jeho skripty
 scripts/google_ads/fetch.py a scripts/meta/fetch.py (čtou data) a výstup uloží k nám.
-Tajné soubory (.env, clients/.secret) nečte. Jede sériově, ať neblokujeme API.
+Tajné soubory (.env) nečte. Jede sériově, ať neblokujeme API.
 """
 import argparse, datetime, os, re, subprocess, sys
 from pathlib import Path
 
 PPC = Path(os.environ.get("FACHMAN_DIR", Path.home() / "AGENTURA" / "PPC"))
-KLIENTI = Path(os.environ.get("KLIENTI_DIR", Path.home() / "AGENTURA" / "klienti"))
 OUT = Path(__file__).resolve().parent.parent / "data-most"
-
-
-def je_nda(slug: str) -> bool:
-    """Čte jen řádek s 'NDA:' ze souboru klienta (nic jiného)."""
-    f = KLIENTI / slug / "ppc" / "ppc.md"
-    if not f.exists():
-        return False
-    for radek in f.read_text(encoding="utf-8", errors="ignore").splitlines():
-        if re.match(r"^\s*[-*]?\s*\**NDA\**\s*:", radek, re.I):
-            return bool(re.search(r"\btrue\b|\bano\b", radek, re.I))
-    return False
 
 
 def spust(prikaz: list[str]) -> str:
@@ -45,8 +33,6 @@ def main() -> None:
         p.error("Zadej aspoň --google nebo --meta.")
     if not re.fullmatch(r"[a-z0-9-]+", a.klient):
         p.error("Název klienta smí obsahovat jen malá písmena, čísla a pomlčky.")
-    if je_nda(a.klient):
-        sys.exit("Klient je pod NDA. Syrová data sem nepouštím. Použij Fachmanův fetch_safe.py (anonymizace).")
     py = PPC / ".venv" / "bin" / "python"
     if not py.exists():
         sys.exit(f"Nenašla jsem {py}. Nejdřív jednorázově nastav Fachmana (viz README-STUDENTI.md / README.md).")

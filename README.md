@@ -74,7 +74,7 @@ Původně vytvořeno v [Lovable](https://lovable.dev), dál vyvíjeno v repozit�
    ```bash
    python3 scripts/most_fachman.py <klient> --google 123-456-7890 --meta act_123456 --dny 30
    ```
-   (stačí jen `--google` nebo jen `--meta`; období 7, 30 nebo 90). Skript spustí Fachmanovy čtecí skripty a uloží soubory do `data-most/` (složka je v `.gitignore`). Klienty pod NDA odmítne.
+   (stačí jen `--google` nebo jen `--meta`; období 7, 30 nebo 90). Skript spustí Fachmanovy čtecí skripty a uloží soubory do `data-most/` (složka je v `.gitignore`).
 3. V AVQIX: **Datové zdroje → Fachman → Vybrat soubory z data-most**. Data žijí jen v paměti prohlížeče a po obnovení stránky se smažou.
 
 Fachmana skript nijak nemění a nic nikam neposílá. Zatím se čtou kampaně z Google Ads a Meta Ads; e-mailing (ActiveCampaign aj.) zatím data nemá.
