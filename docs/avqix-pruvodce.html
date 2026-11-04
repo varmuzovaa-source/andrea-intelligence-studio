@@ -1,0 +1,105 @@
+<!doctype html><html lang="cs"><head><meta charset="utf-8"><title>AVQIX Intelligence Studio · průvodce</title>
+<style>
+@page{size:A4;margin:13mm 14mm}
+*{box-sizing:border-box}
+body{font-family:-apple-system,"Helvetica Neue",Arial,sans-serif;color:#1c1c1c;font-size:10pt;line-height:1.5;margin:0}
+h1{font-size:24pt;margin:0}h1 span{color:#8ac926}.sub{color:#666;margin:1mm 0 5mm}
+h2{font-size:13pt;margin:6mm 0 3mm;padding-bottom:1.5mm;border-bottom:2px solid #b6f23a;page-break-after:avoid}
+h3{font-size:10.5pt;margin:3mm 0 1mm}p{margin:0 0 2.5mm}ul{margin:0 0 3mm;padding-left:5mm}li{margin-bottom:1.2mm}
+table{width:100%;border-collapse:collapse;font-size:9pt;margin:2mm 0 3mm}th,td{text-align:left;padding:1.8mm 2.2mm;border-bottom:1px solid #ddd;vertical-align:top}th{background:#f3f3ef}
+.box{background:#f6f6f1;border-left:3px solid #b6f23a;padding:2.5mm 3.5mm;margin:3mm 0;page-break-inside:avoid}
+.warn{border-left-color:#e5484d}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:4mm}.card{border:1.5px solid #1c1c1c;border-radius:3mm;padding:3mm 4mm}
+.card.hl{background:#e4f7b8}
+code{background:#eee;padding:.3mm 1.3mm;border-radius:1mm;font-size:9pt}
+.ok{color:#2f7d0a;font-weight:700}.no{color:#c0262b;font-weight:700}
+.flow{display:flex;gap:2mm;align-items:stretch;margin:3mm 0}.node{flex:1;border:1.5px solid #1c1c1c;border-radius:3mm;padding:2.5mm;text-align:center;font-size:9pt}.node b{display:block;font-size:10pt}.arrow{align-self:center;font-size:15pt;color:#8ac926;font-weight:700}
+.break{page-break-before:always}
+</style></head><body>
+
+<h1>AVQIX Intelligence Studio<span>.</span></h1>
+<div class="sub">Průvodce: k čemu appka slouží, co umí a neumí, jak pracuje s Fachmanem a kdy použít kterého · stav k 4. 11. 2026</div>
+
+<h2>K čemu appka slouží</h2>
+<p>AVQIX je <b>řídicí pult</b> pro marketing klienta. Z cílů, které si na začátku stanovíš, a z čísel z reklam vyrobí odpověď na otázku <b>„Co mám teď udělat, u které kampaně a v jakém kanálu, abychom ty cíle splnili?“</b>. Rady má s prioritou, jistotou a komu je předat, a tlačítkem <b>Předat</b> z nich vznikne úkol pro tým.</p>
+<div class="box">Je určená pro marketingovou manažerku nebo freelancera, který vede víc klientů a potřebuje rychlý souhrn, co řešit jako první. Neslouží k tomu, aby v reklamních účtech cokoli měnila.</div>
+
+<div class="flow">
+ <div class="node"><b>1. Cíle</b>co chce klient<br>(obchodní, marketingový, KPI)</div><div class="arrow">→</div>
+ <div class="node"><b>2. Čísla</b>z Google Ads a Meta<br>přes Fachmana</div><div class="arrow">→</div>
+ <div class="node"><b>3. Porovnání</b>skutečnost × cíl<br>po kanálech a kampaních</div><div class="arrow">→</div>
+ <div class="node"><b>4. Rady</b>co udělat u které kampaně</div><div class="arrow">→</div>
+ <div class="node"><b>5. Úkoly</b>Předat → kdo to řeší</div>
+</div>
+
+<h2>Jak s ní marketingově pracovat</h2>
+<table>
+<tr><th>Kdy</th><th>Co v appce uděláš</th></tr>
+<tr><td><b>Nový klient</b></td><td>Klienti → Přidat klienta. Cíle a rady → zapsat obchodní cíl, marketingový cíl a čísla (např. ROAS ≥ 5, cena za objednávku ≤ 250 Kč, za měsíc).</td></tr>
+<tr><td><b>Na začátku týdne</b></td><td>Cíle a rady → Aktualizovat z Fachmana (stáhne čerstvá čísla). Přečíst „Jak daleko jsme“. Rady s prioritou Vysoká předat.</td></tr>
+<tr><td><b>Před schůzkou s klientem</b></td><td>Znovu aktualizovat data a projít, které cíle jsou splněné, skoro a pod cílem. Z karet rad máš hotové argumenty i další kroky.</td></tr>
+<tr><td><b>Zadávání práce týmu</b></td><td>Předat → Úkoly týmu: doplnit, kdo úkol řeší, posouvat stav, Export CSV pro kolegy.</td></tr>
+<tr><td><b>Organické vyhledávání</b></td><td>Search Console → nahrát CSV z Google Search Console a projít příležitosti (hodně zobrazení s nízkým CTR, pozice 8 až 20, poklesy).</td></tr>
+</table>
+<p><b>Jak číst rady:</b> priorita říká, co řešit první. Jistota říká, kolik dat za radou je (při „nízké“ dělej jen malé změny). Rada vždy uvádí číslo, ze kterého vychází.</p>
+
+<div class="break"></div>
+<h2>Co appka umí a neumí</h2>
+<div class="two">
+<div class="card hl"><h3 class="ok">Umí</h3><ul>
+<li>Uložit cíle klienta (obchodní, marketingový, KPI s cílem, obdobím a kanálem)</li>
+<li>Porovnat skutečnost s cílem po kanálech (Google, Meta, e-mail) a po kampaních</li>
+<li>Poradit pravidly, co udělat u konkrétní kampaně, s prioritou a jistotou</li>
+<li>Vytvořit úkol tlačítkem Předat, sledovat stav, export CSV</li>
+<li>Stáhnout skutečná čísla z Google Ads a Meta Ads přes Fachmana, zdarma a lokálně</li>
+<li>Vlastní klienty, kteří začínají prázdní (žádná vymyšlená čísla)</li>
+<li>Rozebrat export ze Search Console a najít příležitosti</li>
+<li>Přenést cíle do souboru klienta pro Fachmana a zpět</li>
+</ul></div>
+<div class="card"><h3 class="no">Neumí</h3><ul>
+<li>Měnit cokoli v reklamních účtech. Rady jen navrhují, co udělat.</li>
+<li>Živá data. Čísla jsou z okamžiku posledního stažení.</li>
+<li>Sdílet cíle, klienty a úkoly mezi počítači nebo lidmi (ukládá jen do prohlížeče).</li>
+<li>Přehledy, grafy a reporty pro vlastní klienty (zatím jen pro ukázkové)</li>
+<li>Skutečná e-mailová data (ActiveCampaign aj. zatím nejsou napojená)</li>
+<li>Stáhnout data tlačítkem na veřejném webu (jen na tvém počítači)</li>
+<li>Hluboké analýzy jako Fachman: vyhledávací dotazy, negativní slova, A/B testy, PMax rozpad</li>
+</ul></div>
+</div>
+<div class="box warn"><b>Důležité:</b> rady jsou pravidla nad čísly, ne odhad umělé inteligence. Fungují dobře jako rychlé třídění „kde je problém“. Důvod problému (např. špatné dotazy, feed, sledování konverzí) ale najde až hlubší analýza ve Fachmanovi.</div>
+
+<h2>Jak AVQIX spolupracuje s Fachmanem</h2>
+<p><b>Fachman</b> je tvůj PPC asistent (v Claude Code, složka <code>~/AGENTURA/PPC</code>). Umí číst Google Ads, Meta, GA4 a Sklik, analyzovat účty do hloubky a po tvém schválení navrhovat nebo provádět změny. <b>AVQIX</b> je vrstva nad ním pro cíle, přehled a práci týmu.</p>
+<table>
+<tr><th>Co se děje</th><th>Jak</th></tr>
+<tr><td>Čísla kampaní z účtů</td><td>V AVQIX klikneš <b>Aktualizovat z Fachmana</b>. Appka spustí jeho čtecí skripty (jen čtení) a načte výsledek. Funguje jen při spuštění přes <code>Spustit-AVQIX.command</code> na tvém počítači.</td></tr>
+<tr><td>Přístupy do účtů</td><td>Zůstávají jen ve Fachmanovi na tvém počítači. AVQIX je nečte.</td></tr>
+<tr><td>Cíle klienta</td><td>V AVQIX <b>Zkopírovat pro Fachmana</b> a vložit do části „2. Cíle (KPI)“ souboru <code>ppc.md</code> klienta. Zpět <b>Načíst z ppc.md</b>. Fachman i AVQIX tak mluví o stejných cílech.</td></tr>
+<tr><td>Provedení změn v účtu</td><td>Vždy přes Fachmana a jen po tvém schválení. AVQIX nic nezapisuje.</td></tr>
+</table>
+
+<div class="break"></div>
+<h2>Kdy použít AVQIX a kdy Fachmana</h2>
+<table>
+<tr><th>Situace</th><th>Použij</th><th>Proč</th></tr>
+<tr><td>„Jak na tom klient je proti cílům a co řešit jako první?“</td><td><b>AVQIX</b></td><td>Cíle, porovnání, priorita a jistota na jednom místě.</td></tr>
+<tr><td>Rychlý týdenní přehled a předání úkolů týmu</td><td><b>AVQIX</b></td><td>Předat → Úkoly týmu → Export CSV.</td></tr>
+<tr><td>Příprava na schůzku s klientem</td><td><b>AVQIX</b></td><td>Jasné „splněno / skoro / pod cílem“ a konkrétní kroky.</td></tr>
+<tr><td>Zadání cílů klienta a jejich sdílení s Fachmanem</td><td><b>AVQIX</b></td><td>Jeden formát cílů pro obě strany.</td></tr>
+<tr><td>Organické vyhledávání (Search Console)</td><td><b>AVQIX</b></td><td>Import CSV a pravidlová doporučení.</td></tr>
+<tr><td>„Proč kampaň nefunguje?“ (hluboká analýza)</td><td><b>Fachman</b></td><td>Rozpad na dotazy, klíčová slova, produkty, meziroční srovnání, audit negativ.</td></tr>
+<tr><td>Přímá změna v účtu: rozpočty, bidy, negativa, reklamy</td><td><b>Fachman</b></td><td>Umí zapsat změny po schválení s náhledem (dry-run) a zapsat do changelogu.</td></tr>
+<tr><td>Nová kampaň nebo reklama, texty, A/B testy</td><td><b>Fachman</b></td><td>Má metodiku tvorby kampaní a vyhodnocování testů.</td></tr>
+<tr><td>Vyhodnocení, jestli provedená změna zabrala</td><td><b>Fachman</b></td><td>Učí se z výsledků (baseline → vyhodnocení → poučení).</td></tr>
+<tr><td>Sklik, GA4 a další zdroje</td><td><b>Fachman</b></td><td>AVQIX zatím čte jen Google Ads a Meta Ads.</td></tr>
+</table>
+<div class="box"><b>Jednoduché pravidlo:</b> AVQIX ti řekne, <i>kde</i> je problém a <i>komu</i> ho předat. Fachman zjistí, <i>proč</i> k němu došlo, a <i>opraví</i> to po tvém schválení. Typický týden: AVQIX na začátku týdne → hluboká analýza a změny ve Fachmanovi → v AVQIX úkoly označit jako hotové.</div>
+
+<h2>Rychlý start a odkazy</h2>
+<ul>
+<li>Spuštění: dvojklik na <code>Spustit-AVQIX.command</code> ve složce <code>~/AGENTURA/avqix-intelligence-studio</code> (adresa <code>http://localhost:5173</code>).</li>
+<li>Postup krok za krokem: <code>docs/AVQIX-postup.pdf</code> · přehled funkcí: <code>docs/AVQIX-prehled.pdf</code></li>
+<li>Kód: github.com/varmuzovaa-source/avqix-intelligence-studio · živé demo (vymyšlená data): avqix-intelligence-studio.vercel.app</li>
+<li>Vyzkoušení bez klienta: soubory ze složky <code>ukazka/</code> nahrát na stránce Datové zdroje → Fachman.</li>
+</ul>
+</body></html>

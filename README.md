@@ -77,6 +77,7 @@ npm run build    # produkční build
 
 ## Dokumentace
 
+- [Průvodce: k čemu appka je, co umí a neumí, kdy použít ji a kdy Fachmana (PDF)](docs/AVQIX-pruvodce.pdf)
 - [Postup pro začátečníky (PDF)](docs/AVQIX-postup.pdf)
 - [Roadmapa](roadmap.md)
 - [Původní designový záměr](docs/design-brief.md)
