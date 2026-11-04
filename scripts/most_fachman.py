@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Lokální datový most: Fachman (jen čtení) -> složka data-most -> AVQIX.
 
-Použití (ze složky AVIX):
+Použití (ze složky avqix-intelligence-studio):
   python3 scripts/most_fachman.py <klient> --google 123-456-7890 [--meta act_123456] [--dny 30]
 
 Jen standardní knihovna Pythonu. Fachmana nijak nemění: spustí jeho skripty
